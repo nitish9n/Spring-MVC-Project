@@ -9,7 +9,7 @@ public class WelcomeController {
 	@RequestMapping("/greet")
 	public String hello() {
 		System.out.println("hello");
-		return "index.jsp";
+		return "index1.jsp";
 	}
 	
 

@@ -4,12 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Welcome</title>
+<title>order</title>
 </head>
 <body>
-
-<h1>HELLO, THIS IS MY FIRST MVC PROJECT........</h1>
-
-
+	<h1>Your order has been dispatched, and will be delivered soon... Thank you.</h1>
 </body>
 </html>

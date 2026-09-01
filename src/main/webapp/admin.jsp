@@ -4,12 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Welcome</title>
+<title>Admin</title>
 </head>
 <body>
-
-<h1>HELLO, THIS IS MY FIRST MVC PROJECT........</h1>
-
-
+	<h1>Welcome. You can login as Admin.....</h1>
 </body>
 </html>

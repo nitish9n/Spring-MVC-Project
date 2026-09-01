@@ -9,23 +9,23 @@ public class WelcomeController {
 	@RequestMapping("/")
 	public String hello() {
 		System.out.println("hello");
-		return "index1.jsp";
+		return "index1";
 	}
 	
 	@RequestMapping("/admin")
 	public String admin() {
 		System.out.println("admin");
-		return "admin.jsp";
+		return "admin";
 	}
 	@RequestMapping("/order")
 	public String order() {
 		System.out.println("order");
-		return "order.jsp";
+		return "order";
 	}
 	@RequestMapping("/CEO")
 	public String redirect() {
 		System.out.println("redirect to admin");
-		return "redirect:/admin";        // it will redirect to the admin page
+		return "redirect:/admin";        
 	}
 	
 

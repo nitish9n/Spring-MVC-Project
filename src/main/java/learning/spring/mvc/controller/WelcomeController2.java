@@ -4,29 +4,29 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api1")
-public class WelcomeController {
+@RequestMapping("/api2")
+public class WelcomeController2 {
 	
 	@RequestMapping("/")
 	public String hello() {
 		System.out.println("hello");
-		return "/index1.jsp";
+		return "index1.jsp";
 	}
 	
 	@RequestMapping("/admin")
 	public String admin() {
 		System.out.println("admin");
-		return "/admin.jsp";
+		return "admin.jsp";
 	}
 	@RequestMapping("/order")
 	public String order() {
 		System.out.println("order");
-		return "/order.jsp";
+		return "order.jsp";
 	}
 	@RequestMapping("/CEO")
 	public String redirect() {
 		System.out.println("redirect to admin");
-		return "redirect:/api1/admin";        // it will redirect to the admin page
+		return "redirect:/admin";        // it will redirect to the admin page
 	}
 	
 

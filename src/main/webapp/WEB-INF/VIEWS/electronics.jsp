@@ -4,12 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Welcome</title>
+<title>Electronics</title>
 </head>
 <body>
-
-<h1>WELCOME, THIS IS MY FIRST MVC PROJECT........</h1>
-
-
+	<h1>Welcome to the Electronics Section</h1>
 </body>
 </html>

@@ -27,7 +27,7 @@ public class WelcomeController2 {
 	@RequestMapping("/CEO")
 	public String redirect() {
 		System.out.println("redirect to admin");
-		return "redirect:/admin";        
+		return "redirect:/api2/admin";        
 	}
 	
 

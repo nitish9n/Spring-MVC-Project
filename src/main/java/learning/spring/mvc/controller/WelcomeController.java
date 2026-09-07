@@ -27,7 +27,7 @@ public class WelcomeController {
 	@RequestMapping("/CEO")
 	public String redirect() {
 		System.out.println("redirect to admin");
-		return "redirect:/admin";        // it will redirect to the admin page
+		return "redirect:/admin";        
 	}
 	
 	
@@ -35,13 +35,16 @@ public class WelcomeController {
 	@RequestMapping("/book")
 	public String requestParam(@RequestParam("bookName") String bookName,
 			@RequestParam("price") int price, 
+			@RequestParam("location") String location, 
 			Model model) {
 		model.addAttribute("myModel", bookName);
 		model.addAttribute("mulya", price);
+		model.addAttribute("address", location);
 		
 		return "myView";
 		
-		// http://localhost:8080/Spring-MVC-Project/book?bookName=java
+		// http://localhost:8080/Spring-MVC-Project/book?bookName=java (single parameter)
+		// http://localhost:8080/Spring-MVC-Project/book?bookName=java&price=100&location=bxr  (triple parameter)
 	}
 	
 

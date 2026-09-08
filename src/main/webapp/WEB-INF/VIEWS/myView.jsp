@@ -10,5 +10,7 @@
 	<h1> Book Name is....${myModel}</h1>
 	<h1> Book Price is....${mulya}</h1>
 	<h1> Location is....${address}</h1>
+	
+	<h1>Path variable value is ${pathVariable}</h1>
 </body>
 </html>

@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class WelcomeController {
@@ -38,7 +39,7 @@ public class WelcomeController {
 			@RequestParam(value="price", defaultValue="0") int price, 
 			@RequestParam(value="location", defaultValue = "null") String location, 
 			Model model) {
-		model.addAttribute("myModel", bookName);
+		model.addAttribute("myModel", bookName);  // adding msg to model
 		model.addAttribute("mulya", price);
 		model.addAttribute("address", location);
 		
@@ -53,6 +54,14 @@ public class WelcomeController {
 	public String pathVariable(@PathVariable(value="id") int num, Model model) {
 		model.addAttribute("pathVariable", num);
 		return "myView";
+		
+	}
+	// response body-> it bypass jsp page and return data directly into http response
+	@RequestMapping("/response")
+	@ResponseBody
+	public String responseBody(@RequestParam(value="name") String n1) {
+		System.out.println("Welcome "+n1);
+		return "Welcome "+n1;     // no need of .jsp page(view)
 		
 	}
 	

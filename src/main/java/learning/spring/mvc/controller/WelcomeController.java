@@ -2,10 +2,14 @@ package learning.spring.mvc.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class WelcomeController {
@@ -65,6 +69,32 @@ public class WelcomeController {
 		
 	}
 	
+	// get system cookies
+	@RequestMapping("/getCookie")
+	public String getCookies(@CookieValue(value="JSESSIONID") String c, Model model) {
+		System.out.println("This is cookie: "+c);
+		model.addAttribute("sessionId", c);
+		return "cookie";     
+		
+	}
+	// create own cookies
+	@RequestMapping("/setMyCookie")
+	public String setMyCookies(HttpServletResponse response, Model model) {
+		
+		Cookie cookie1 = new Cookie("firstCookie", 	"SENSITIVEINFORMAION");
+		cookie1.setMaxAge(10);       // expiry
+		response.addCookie(cookie1); //it will set cookie to the whoever will search url
+		
+		return "redirect:/getMyCookie";     
+		
+	}
+	
+	@RequestMapping("/getMyCookie")
+	public String getMyCookies(@CookieValue(value="firstCookie") String c, Model model) {
+		System.out.println("This is cookie: "+c);
+		model.addAttribute("sessionId", c);
+		return "cookie"; 
+	}
 
 }
 

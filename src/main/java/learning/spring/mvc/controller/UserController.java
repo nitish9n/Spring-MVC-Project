@@ -53,7 +53,7 @@ public class UserController {
     
     
     @PostMapping("/login")
-    public String processLoginFormByRequestParam(@RequestParam("username") String username,
+    public String processLoginForm(@RequestParam("username") String username,
     		@RequestParam("password") String password, Model model) {
     	
     	User validateUser = userservice.validateUser(username, password);

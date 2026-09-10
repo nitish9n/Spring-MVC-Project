@@ -5,7 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Profile</title>
-
+<script>
+    alert("Login Successful! Welcome");
+</script>
 </head>
 <body>
 	<h1>Welcome ${savedUser.username}. You can explore your account.....</h1>

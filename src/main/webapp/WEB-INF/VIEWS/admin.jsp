@@ -5,7 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Admin</title>
-	
+	<script>
+    alert("SignUp Successful! Now, you can login.");
+</script>
 </head>
 <body>
 	<h1>Welcome. You can login as Admin.....</h1>

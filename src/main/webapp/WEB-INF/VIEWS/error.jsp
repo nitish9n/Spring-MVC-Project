@@ -8,5 +8,9 @@
 </head>
 <body>
 	<h1>SORRY! Your login credential is wrong</h1>
+	
+	<form action="${pageContext.request.contextPath}/login" method="get">
+	<input type="submit" value="Login">
+	</form>
 </body>
 </html>

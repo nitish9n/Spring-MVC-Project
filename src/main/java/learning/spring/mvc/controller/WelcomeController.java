@@ -17,7 +17,7 @@ public class WelcomeController {
 	@RequestMapping("/")
 	public String hello() {
 		System.out.println("hello");
-		return "index1";
+		return "iblog";
 	}
 	
 	@RequestMapping("/admin")

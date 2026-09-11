@@ -15,6 +15,7 @@ import org.springframework.orm.jpa.hibernate.HibernateTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -67,6 +68,19 @@ public class SpringConfig implements WebMvcConfigurer{
 	        SessionFactory sessionFactory) {
 
 	    return new HibernateTransactionManager(sessionFactory);
+	}
+	
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+	    registry.addResourceHandler("/css/**")
+	            .addResourceLocations("/css/");
+
+	    registry.addResourceHandler("/img/**")
+	            .addResourceLocations("/img/");
+
+	    registry.addResourceHandler("/js/**")
+	            .addResourceLocations("/js/");
 	}
 	
 

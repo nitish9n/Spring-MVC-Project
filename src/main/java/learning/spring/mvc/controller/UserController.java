@@ -56,13 +56,9 @@ public class UserController {
     	
     	System.out.println("processLoginform");
     	if(validateUser != null) {
-//    		return "profile";
     		return validateUser;
-//    		return "Hi "+validateUser.getUsername()+" , you have logged in successfully";
     	}else 
     	
-//    		return "error"; 
     		return null; 
-//    		return "Sorry "+username+" , you have entered incorrect credentials"; 
     }
 }

@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
+@EnableTransactionManagement
 @ComponentScan(basePackages = "learning.spring.mvc")
 @Configuration
 public class SpringConfig implements WebMvcConfigurer{
@@ -41,7 +43,7 @@ public class SpringConfig implements WebMvcConfigurer{
 		
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/mydb");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/iblog");
 		dataSource.setUsername("root");
 		dataSource.setPassword("root");
 		return dataSource;
@@ -57,7 +59,7 @@ public class SpringConfig implements WebMvcConfigurer{
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.put("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
 		hibernateProperties.put("hibernate.show_sql","true");
-		hibernateProperties.put("hibernate.hbm2ddl.auto","create");
+		hibernateProperties.put("hibernate.hbm2ddl.auto","update");
 		sessionFactory.setHibernateProperties(hibernateProperties);
 		return sessionFactory;
 		
@@ -78,10 +80,9 @@ public class SpringConfig implements WebMvcConfigurer{
 
 	    registry.addResourceHandler("/img/**")
 	            .addResourceLocations("/img/");
-
-	    registry.addResourceHandler("/js/**")
-	            .addResourceLocations("/js/");
 	}
+	
+	
 	
 
 }

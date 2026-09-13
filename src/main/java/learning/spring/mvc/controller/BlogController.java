@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
-
 import learning.spring.mvc.model.Post;
 import learning.spring.mvc.model.User;
 import learning.spring.mvc.service.PostService;
@@ -27,20 +26,17 @@ public class BlogController {
     // ================= ADD BLOG PAGE =================
 
     @GetMapping("/addBlog")
-    public String showAddBlog(
-            HttpSession session) {
+    public String showAddBlog(HttpSession session) {
 
         User user =
-                (User) session.getAttribute(
-                        "loggedInUser");
+                (User) session.getAttribute("loggedInUser");
 
         // User must login first
         if (user == null) {
-
             return "redirect:/login";
         }
 
-        return "addblog";
+        return "iblogaddblog";
     }
 
 
@@ -52,20 +48,20 @@ public class BlogController {
             HttpSession session) {
 
         User user =
-                (User) session.getAttribute(
-                        "loggedInUser");
+                (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
-
             return "redirect:/login";
         }
 
         // Automatically set author
-        post.setAuthor(
-                user.getUsername());
+        post.setAuthor(user.getUsername());
 
         postService.addPost(post);
 
+        // IMPORTANT:
+        // /blogs is the endpoint
+        // iblogblogs is the JSP view name
         return "redirect:/blogs";
     }
 
@@ -73,17 +69,14 @@ public class BlogController {
     // ================= ALL BLOGS =================
 
     @GetMapping("/blogs")
-    public String showAllBlogs(
-            Model model) {
+    public String showAllBlogs(Model model) {
 
         List<Post> posts =
                 postService.getAllPosts();
 
-        model.addAttribute(
-                "posts",
-                posts);
+        model.addAttribute("posts", posts);
 
-        return "blogs";
+        return "iblogblogs";
     }
 
 
@@ -97,11 +90,9 @@ public class BlogController {
         Post post =
                 postService.getPostById(id);
 
-        model.addAttribute(
-                "post",
-                post);
+        model.addAttribute("post", post);
 
-        return "blogpost";
+        return "iblogblogpost";
     }
 
 
@@ -115,15 +106,10 @@ public class BlogController {
         List<Post> posts =
                 postService.searchPosts(query);
 
-        model.addAttribute(
-                "posts",
-                posts);
+        model.addAttribute("posts", posts);
+        model.addAttribute("query", query);
 
-        model.addAttribute(
-                "query",
-                query);
-
-        return "blogs";
+        return "iblogblogs";
     }
 
 
@@ -135,11 +121,9 @@ public class BlogController {
             HttpSession session) {
 
         User user =
-                (User) session.getAttribute(
-                        "loggedInUser");
+                (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
-
             return "redirect:/login";
         }
 

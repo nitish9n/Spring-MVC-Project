@@ -97,7 +97,7 @@
 
     <!-- RIGHT SIDE LOGIN -->
    <div class="nav-login">
-    <a href="${pageContext.request.contextPath}/login" class="signin-btn">
+    <a href="${pageContext.request.contextPath}/login" class="login-link">
         Sign In
     </a>
 </div>

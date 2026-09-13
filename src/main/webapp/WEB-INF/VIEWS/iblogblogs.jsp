@@ -2,66 +2,221 @@
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Blogs - iBlog</title>
+
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/css/utils.css">
+
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/css/style.css">
+
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/css/mobile.css">
 
 </head>
 
+
 <body>
 
-    <h1>All Blogs</h1>
+    <!-- ================= NAVIGATION ================= -->
+
+    <nav class="navigation max-width-1 m-auto">
+
+        <div class="nav-left">
+
+            <a href="${pageContext.request.contextPath}/">
+
+                <span>
+
+                    <img
+                        src="${pageContext.request.contextPath}/img/logo.png"
+                        width="94px"
+                        alt="iBlog">
+
+                </span>
+
+            </a>
 
 
-    <c:if test="${empty posts}">
+            <ul>
 
-        <p>
-            No blogs found.
-        </p>
+                <li>
+                    <a href="${pageContext.request.contextPath}/">
+                        Home
+                    </a>
+                </li>
 
-    </c:if>
+                <li>
+                    <a href="${pageContext.request.contextPath}/about">
+                        About
+                    </a>
+                </li>
+
+                <li>
+                    <a href="${pageContext.request.contextPath}/contact">
+                        Contact
+                    </a>
+                </li>
+
+                <li>
+                    <a href="${pageContext.request.contextPath}/addBlog">
+                        Add Blog
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
 
 
-    <c:forEach var="post" items="${posts}">
+        <!-- ================= SEARCH ================= -->
 
-        <article>
+        <div class="nav-search">
 
-            <h2>
+            <form
+                action="${pageContext.request.contextPath}/search"
+                method="get">
 
-                <a href="${pageContext.request.contextPath}/blogpost/${post.id}">
+                <input
+                    class="form-input"
+                    type="text"
+                    name="query"
+                    placeholder="Article Search">
 
-                    ${post.title}
+                <button
+                    class="btn"
+                    type="submit">
 
-                </a>
+                    Search
 
-            </h2>
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ================= LOGIN ================= -->
+
+        <div class="nav-login">
+
+            <a
+                href="${pageContext.request.contextPath}/login"
+                class="login-link">
+
+                Sign In
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="max-width-1 m-auto">
+
+        <hr>
+
+    </div>
+
+
+    <!-- ================= BLOGS ================= -->
+
+    <main class="home-articles max-width-1 m-auto font2">
+
+        <h1>All Blogs</h1>
+
+
+        <!-- NO BLOGS -->
+
+        <c:if test="${empty posts}">
 
             <p>
-                By ${post.author}
+                No blogs found.
             </p>
 
-            <p>
-                ${post.content}
-            </p>
+        </c:if>
+
+
+        <!-- BLOG LIST -->
+
+        <c:forEach var="post" items="${posts}">
+
+            <div class="home-article">
+
+                <div class="home-article-content font1">
+
+                    <h2>
+
+                        <a
+                            href="${pageContext.request.contextPath}/blogpost/${post.id}">
+
+                            ${post.title}
+
+                        </a>
+
+                    </h2>
+
+
+                    <p>
+
+                        <strong>By:</strong>
+                        ${post.author}
+
+                    </p>
+
+
+                    <p>
+
+                        ${post.content}
+
+                    </p>
+
+
+                    <br>
+
+
+                    <a
+                        href="${pageContext.request.contextPath}/blogpost/${post.id}">
+
+                        Read More →
+
+                    </a>
+
+                </div>
+
+            </div>
 
             <hr>
 
-        </article>
+        </c:forEach>
 
-    </c:forEach>
+    </main>
 
 
-    <a href="${pageContext.request.contextPath}/">
-        Back to Home
-    </a>
+    <!-- ================= FOOTER ================= -->
+
+    <div class="footer">
+
+        <p>
+            Copyright &copy; iBlog.com
+        </p>
+
+    </div>
+
 
 </body>
 

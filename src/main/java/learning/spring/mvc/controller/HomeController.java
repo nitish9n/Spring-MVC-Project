@@ -22,7 +22,7 @@ public class HomeController {
     @GetMapping("/about")
     public String about() {
 
-        return "about";
+        return "iblogabout";
     }
 
 
@@ -31,6 +31,6 @@ public class HomeController {
     @GetMapping("/contact")
     public String contact() {
 
-        return "contact";
+        return "iblogcontact";
     }
 }

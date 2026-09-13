@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
+
 import learning.spring.mvc.model.User;
 import learning.spring.mvc.service.UserService;
 
@@ -21,6 +23,9 @@ public class UserController {
 
     @Autowired
     private UserService userservice;
+
+
+    // ================= REST USER ENDPOINTS =================
 
     @ResponseBody
     @PostMapping("/addUser")
@@ -31,6 +36,7 @@ public class UserController {
         return user;
     }
 
+
     @ResponseBody
     @GetMapping("/getUser/{id}")
     public User getUser(@PathVariable(name = "id") int id) {
@@ -38,44 +44,82 @@ public class UserController {
         return userservice.validateUser(id);
     }
 
+
     @ResponseBody
     @GetMapping("/getAllUser")
     public List<User> getAllUser() {
 
         return userservice.getAllUsers();
     }
-    
+
+
+    // ================= SIGNUP =================
+
     @GetMapping("/signup")
     public String showSignup() {
+
         return "iblogsignup";
     }
+
+
     @PostMapping("/processSignup")
-    public String processSignup(@ModelAttribute("user") User user) {
+    public String processSignup(
+            @ModelAttribute("user") User user) {
 
         userservice.addUser(user);
 
-        System.out.println("New User Registered: " + user);
+        System.out.println(
+                "New User Registered: " + user);
+
+        return "redirect:/login";
+    }
+
+
+    // ================= LOGIN =================
+
+    @GetMapping("/login")
+    public String showLogin() {
 
         return "ibloglogin";
     }
-    @GetMapping("/login")
-    public String showLogin() {
-        return "ibloglogin";
-    }
+
+
     @PostMapping("/processLogin")
     public String processLogin(
             @RequestParam("username") String username,
             @RequestParam("password") String password,
-            Model model) {
+            Model model,
+            HttpSession session) {
 
-        User user = userservice.loginUser(username, password);
+        User user =
+                userservice.loginUser(username, password);
 
         if (user != null) {
-            model.addAttribute("user", user);
+
+            // Store logged-in user in session
+            session.setAttribute("loggedInUser", user);
+
+            System.out.println(
+                    "Login successful: " + user.getUsername());
+
             return "redirect:/";
         }
 
-        model.addAttribute("error", "Invalid username or password");
-        return "login";
+        model.addAttribute(
+                "error",
+                "Invalid username or password");
+
+        return "ibloglogin";
+    }
+
+
+    // ================= LOGOUT =================
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+
+        session.invalidate();
+
+        return "redirect:/";
     }
 }

@@ -28,48 +28,81 @@
 
 	<!-- ================= NAVIGATION ================= -->
 
-	<nav class="navigation max-width-1 m-auto">
+	<!-- ================= NAVIGATION ================= -->
+<nav class="navigation max-width-1 m-auto">
 
-		<div class="nav-left">
+    <!-- LEFT SIDE -->
+    <div class="nav-left">
 
-			<a href="${pageContext.request.contextPath}/"> <span> <img
-					src="${pageContext.request.contextPath}/img/logo.png" width="94px"
-					alt="iBlog">
-			</span>
-			</a>
+        <a href="${pageContext.request.contextPath}/">
+            <span>
+                <img
+                    src="${pageContext.request.contextPath}/img/logo.png"
+                    width="94px"
+                    alt="iBlog">
+            </span>
+        </a>
 
-			<ul>
+        <ul>
+            <li>
+                <a href="${pageContext.request.contextPath}/">
+                    Home
+                </a>
+            </li>
 
-				<li><a href="${pageContext.request.contextPath}/"> Home </a></li>
+            <li>
+                <a href="${pageContext.request.contextPath}/about">
+                    About
+                </a>
+            </li>
 
-				<li><a href="${pageContext.request.contextPath}/about">
-						About </a></li>
+            <li>
+                <a href="${pageContext.request.contextPath}/contact">
+                    Contact
+                </a>
+            </li>
 
-				<li><a href="${pageContext.request.contextPath}/contact">
-						Contact </a></li>
+            <!-- ADD BLOG -->
+            <li>
+                <a href="${pageContext.request.contextPath}/addBlog">
+                    Add Blog
+                </a>
+            </li>
+        </ul>
 
-			</ul>
-
-		</div>
+    </div>
 
 
-		<!-- ================= SEARCH ================= -->
+    <!-- CENTER SEARCH -->
+    <div class="nav-search">
 
-		<div class="nav-right">
+        <form
+            action="${pageContext.request.contextPath}/search"
+            method="get">
 
-			<form action="${pageContext.request.contextPath}/search" method="get">
+            <input
+                class="form-input"
+                type="text"
+                name="query"
+                placeholder="Article Search">
 
-				<input class="form-input" type="text" name="query"
-					placeholder="Article Search">
+            <button class="btn" type="submit">
+                Search
+            </button>
 
-				<button class="btn" type="submit">Search</button>
+        </form>
 
-			</form>
+    </div>
 
-		</div>
 
-	</nav>
+    <!-- RIGHT SIDE LOGIN -->
+   <div class="nav-login">
+    <a href="${pageContext.request.contextPath}/login" class="signin-btn">
+        Sign In
+    </a>
+</div>
 
+</nav>
 
 	<div class="max-width-1 m-auto">
 		<hr>

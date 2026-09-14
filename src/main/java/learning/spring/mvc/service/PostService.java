@@ -49,6 +49,13 @@ public class PostService {
 
 
     @Transactional
+    public void updatePost(Post post) {
+
+        postDAO.updatePost(post);
+    }
+
+
+    @Transactional
     public void deletePost(int id) {
 
         postDAO.deletePost(id);

@@ -1,411 +1,606 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<%@ page language="java"
+    contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<!-- CSS -->
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/utils.css">
 
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/css/utils.css">
 
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/mobile.css">
+    <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/css/style.css">
 
-<title>iBlog - Heaven for bloggers</title>
+    <link rel="stylesheet"
+        href="${pageContext.request.contextPath}/css/mobile.css">
+
+
+    <title>iBlog - Heaven for bloggers</title>
+
+
+    <style>
+
+        /* =========================================
+           BLOG GRID
+           ========================================= */
+
+        .blog-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 30px;
+
+            margin-top: 30px;
+        }
+
+
+        /* =========================================
+           BLOG CARD
+           ========================================= */
+
+        .blog-card {
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            overflow: hidden;
+
+            background: white;
+
+            transition: 0.2s;
+        }
+
+
+        .blog-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 5px 15px
+                rgba(0, 0, 0, 0.12);
+        }
+
+
+        /* =========================================
+           BLOG IMAGE
+           ========================================= */
+
+        .blog-card-image {
+
+            width: 100%;
+
+            height: 200px;
+
+            object-fit: cover;
+
+            display: block;
+        }
+
+
+        /* =========================================
+           BLOG CONTENT
+           ========================================= */
+
+        .blog-card-content {
+
+            padding: 20px;
+        }
+
+
+        .blog-card-content h3 {
+
+            margin-bottom: 10px;
+        }
+
+
+        .blog-card-content h3 a {
+
+            text-decoration: none;
+        }
+
+
+        .blog-author {
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .blog-date {
+
+            font-size: 13px;
+
+            color: #777;
+        }
+
+
+        .blog-preview {
+
+            margin-top: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================
+           BUTTON CONTAINER
+           ========================================= */
+
+        .blog-actions {
+
+            margin-top: 15px;
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        /* =========================================
+           UPDATE BUTTON
+           ========================================= */
+
+        .update-btn {
+
+            display: inline-block;
+
+            padding: 8px 14px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            background: #007bff;
+
+            color: white;
+
+            text-decoration: none;
+
+            cursor: pointer;
+        }
+
+
+        .update-btn:hover {
+
+            background: #0056b3;
+        }
+
+
+        /* =========================================
+           DELETE BUTTON
+           ========================================= */
+
+        .delete-btn {
+
+            display: inline-block;
+
+            padding: 8px 14px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            background: #dc3545;
+
+            color: white;
+
+            text-decoration: none;
+
+            cursor: pointer;
+        }
+
+
+        .delete-btn:hover {
+
+            background: #b02a37;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media screen and (max-width: 900px) {
+
+            .blog-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+
+        @media screen and (max-width: 600px) {
+
+            .blog-grid {
+
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-	<!-- ================= NAVIGATION ================= -->
 
-	<!-- ================= NAVIGATION ================= -->
-<nav class="navigation max-width-1 m-auto">
+    <!-- ================= NAVIGATION ================= -->
 
-    <!-- LEFT SIDE -->
-    <div class="nav-left">
+    <nav class="navigation max-width-1 m-auto">
 
-        <a href="${pageContext.request.contextPath}/">
-            <span>
-                <img
-                    src="${pageContext.request.contextPath}/img/logo.png"
-                    width="94px"
-                    alt="iBlog">
-            </span>
-        </a>
 
-        <ul>
-            <li>
-                <a href="${pageContext.request.contextPath}/">
-                    Home
-                </a>
-            </li>
+        <!-- LEFT -->
 
-            <li>
-                <a href="${pageContext.request.contextPath}/about">
-                    About
-                </a>
-            </li>
+        <div class="nav-left">
 
-            <li>
-                <a href="${pageContext.request.contextPath}/contact">
-                    Contact
-                </a>
-            </li>
+            <a href="${pageContext.request.contextPath}/">
 
-            <!-- ADD BLOG -->
-            <li>
-                <a href="${pageContext.request.contextPath}/addBlog">
-                    Add Blog
-                </a>
-            </li>
-        </ul>
+                <span>
+
+                    <img
+                        src="${pageContext.request.contextPath}/img/logo.png"
+                        width="94px"
+                        alt="iBlog">
+
+                </span>
+
+            </a>
+
+
+            <ul>
+
+                <li>
+
+                    <a href="${pageContext.request.contextPath}/">
+
+                        Home
+
+                    </a>
+
+                </li>
+
+
+                <li>
+
+                    <a href="${pageContext.request.contextPath}/about">
+
+                        About
+
+                    </a>
+
+                </li>
+
+
+                <li>
+
+                    <a href="${pageContext.request.contextPath}/contact">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+
+                <li>
+
+                    <a href="${pageContext.request.contextPath}/addBlog">
+
+                        Add Blog
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="nav-search">
+
+            <form
+                action="${pageContext.request.contextPath}/search"
+                method="get">
+
+                <input
+                    class="form-input"
+                    type="text"
+                    name="query"
+                    placeholder="Article Search">
+
+                <button
+                    class="btn"
+                    type="submit">
+
+                    Search
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <div class="nav-login">
+
+            <a
+                href="${pageContext.request.contextPath}/login"
+                class="login-link">
+
+                Sign In
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="max-width-1 m-auto">
+
+        <hr>
 
     </div>
 
 
-    <!-- CENTER SEARCH -->
-    <div class="nav-search">
+    <!-- ================= HOME CONTENT ================= -->
 
-        <form
-            action="${pageContext.request.contextPath}/search"
-            method="get">
+    <div class="m-auto content max-width-1 my-2">
 
-            <input
-                class="form-input"
-                type="text"
-                name="query"
-                placeholder="Article Search">
 
-            <button class="btn" type="submit">
-                Search
-            </button>
+        <div class="content-left">
 
-        </form>
+            <h1>
+
+                The heaven for bloggers
+
+            </h1>
+
+
+            <p>
+
+                iBlog is a website which lets you submit
+
+                an article and share your thoughts with
+
+                other readers.
+
+            </p>
+
+
+            <p>
+
+                Read interesting articles, share your
+
+                knowledge and discover new ideas from
+
+                other bloggers.
+
+            </p>
+
+        </div>
+
+
+        <div class="content-right">
+
+            <img
+                src="${pageContext.request.contextPath}/img/home.svg"
+                alt="iBlog">
+
+        </div>
 
     </div>
 
 
-    <!-- RIGHT SIDE LOGIN -->
-   <div class="nav-login">
-    <a href="${pageContext.request.contextPath}/login" class="login-link">
-        Sign In
-    </a>
-</div>
+    <div class="max-width-1 m-auto">
 
-</nav>
+        <hr>
 
-	<div class="max-width-1 m-auto">
-		<hr>
-	</div>
+    </div>
 
 
-	<!-- ================= HOME CONTENT ================= -->
+    <!-- ================= BLOGS ================= -->
 
-	<div class="m-auto content max-width-1 my-2">
+    <div class="home-articles max-width-1 m-auto font2">
 
-		<div class="content-left">
 
-			<h1>The heaven for bloggers</h1>
+        <h2>
 
-			<p>iBlog is a website which lets you submit an article which upon
-				approval will be up on our website and you can get a good amount of
-				reach from here!</p>
+            Featured Articles
 
-			<p>My Halloween decorations are staying in the box this year. To
-				be honest, they didn’t make it out of the box last year either. My
-				Halloween spirit has officially been bludgeoned to death by
-				teenagers who no longer care and a persistent October fear of the
-				Northern California wildfires. And speaking of fear, isn’t there
-				more than enough of that going around? Maybe all of us can pretend
-				that Halloween isn’t even happening this year?</p>
+        </h2>
 
-		</div>
 
+        <!-- NO BLOGS -->
 
-		<div class="content-right">
+        <c:if test="${empty posts}">
 
-			<img src="${pageContext.request.contextPath}/img/home.svg"
-				alt="iBlog">
+            <p>
 
-		</div>
+                No blogs available yet.
 
-	</div>
+            </p>
 
+        </c:if>
 
-	<div class="max-width-1 m-auto">
-		<hr>
-	</div>
 
+        <!-- BLOG GRID -->
 
-	<!-- ================= FEATURED ARTICLES ================= -->
+        <div class="blog-grid">
 
-	<div class="home-articles max-width-1 m-auto font2">
 
-		<h2>Featured Articles</h2>
+            <c:forEach
+                var="post"
+                items="${posts}">
 
 
-		<!-- YEAR FILTER -->
+                <div class="blog-card">
 
-		<div class="year-box adjust-year">
 
-			<div>
-				<h3>Year</h3>
-			</div>
+                    <!-- ================= IMAGE ================= -->
 
-			<div>
-				<input type="radio" name="year" id="year2020"> 2020
-			</div>
+                    <c:choose>
 
-			<div>
-				<input type="radio" name="year" id="year2021"> 2021
-			</div>
 
-		</div>
+                        <c:when
+                            test="${not empty post.imageName}">
 
+                            <img
+                                class="blog-card-image"
+                                src="${pageContext.request.contextPath}/img/blogs/${post.imageName}"
+                                alt="${post.title}">
 
-		<!-- ================= ARTICLE 1 ================= -->
+                        </c:when>
 
-		<div class="home-article">
 
-			<div class="home-article-img">
+                        <c:otherwise>
 
-				<img src="${pageContext.request.contextPath}/img/3.png"
-					alt="article">
+                            <img
+                                class="blog-card-image"
+                                src="${pageContext.request.contextPath}/img/3.png"
+                                alt="iBlog">
 
-			</div>
+                        </c:otherwise>
 
-			<div class="home-article-content font1">
 
-				<a href="${pageContext.request.contextPath}/blogpost">
+                    </c:choose>
 
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
 
-				</a>
+                    <!-- ================= CONTENT ================= -->
 
-				<div>Author Name</div>
+                    <div class="blog-card-content">
 
-				<span> 07 January | 6 min read </span>
 
-			</div>
+                        <!-- TITLE -->
 
-		</div>
+                        <h3>
 
+                            <a
+                                href="${pageContext.request.contextPath}/blogpost/${post.id}">
 
-		<!-- ================= ARTICLE 2 ================= -->
+                                ${post.title}
 
-		<div class="home-article">
+                            </a>
 
-			<div class="home-article-img">
+                        </h3>
 
-				<img src="${pageContext.request.contextPath}/img/1.png"
-					alt="article">
 
-			</div>
+                        <!-- AUTHOR -->
 
-			<div class="home-article-content font1">
+                        <div class="blog-author">
 
-				<a href="${pageContext.request.contextPath}/blogpost">
+                            By ${post.author}
 
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
+                        </div>
 
-				</a>
 
-				<div>Author Name</div>
+                        <!-- DATE -->
 
-				<span> 07 January | 6 min read </span>
+                        <div class="blog-date">
 
-			</div>
+                            ${post.createdAt}
 
-		</div>
+                        </div>
 
 
-		<!-- ================= ARTICLE 3 ================= -->
+                        <!-- CONTENT PREVIEW -->
 
-		<div class="home-article">
+                        <div class="blog-preview">
 
-			<div class="home-article-img">
+                            ${post.content}
 
-				<img src="${pageContext.request.contextPath}/img/2.png"
-					alt="article">
+                        </div>
 
-			</div>
 
-			<div class="home-article-content font1">
+                        <!-- ================= UPDATE + DELETE ================= -->
 
-				<a href="${pageContext.request.contextPath}/blogpost">
+                        <c:if
+                            test="${not empty sessionScope.loggedInUser
+                            and sessionScope.loggedInUser.username == post.author}">
 
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
 
-				</a>
+                            <div class="blog-actions">
 
-				<div>Author Name</div>
 
-				<span> 07 January | 6 min read </span>
+                                <!-- UPDATE -->
 
-			</div>
+                                <a
+                                    class="update-btn"
+                                    href="${pageContext.request.contextPath}/updateBlog/${post.id}">
 
-		</div>
+                                    Update
 
+                                </a>
 
-		<!-- ================= ARTICLE 4 ================= -->
 
-		<div class="home-article">
+                                <!-- DELETE -->
 
-			<div class="home-article-img">
+                                <a
+                                    class="delete-btn"
+                                    href="${pageContext.request.contextPath}/deleteBlog/${post.id}"
+                                    onclick="return confirm('Are you sure you want to delete this post?');">
 
-				<img src="${pageContext.request.contextPath}/img/1.png"
-					alt="article">
+                                    Delete
 
-			</div>
+                                </a>
 
-			<div class="home-article-content font1">
 
-				<a href="${pageContext.request.contextPath}/blogpost">
+                            </div>
 
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
 
-				</a>
+                        </c:if>
 
-				<div>Author Name</div>
 
-				<span> 07 January | 6 min read </span>
+                    </div>
 
-			</div>
 
-		</div>
+                </div>
 
 
-		<!-- ================= ARTICLE 5 ================= -->
+            </c:forEach>
 
-		<div class="home-article">
 
-			<div class="home-article-img">
+        </div>
 
-				<img src="${pageContext.request.contextPath}/img/11.svg"
-					alt="article">
 
-			</div>
+    </div>
 
-			<div class="home-article-content font1">
 
-				<a href="${pageContext.request.contextPath}/blogpost">
+    <!-- ================= FOOTER ================= -->
 
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
+    <div class="footer">
 
-				</a>
+        <p>
 
-				<div>Author Name</div>
+            Copyright &copy; iBlog.com
 
-				<span> 07 January | 6 min read </span>
+        </p>
 
-			</div>
+    </div>
 
-		</div>
-
-
-		<!-- ================= ARTICLE 6 ================= -->
-
-		<div class="home-article">
-
-			<div class="home-article-img">
-
-				<img src="${pageContext.request.contextPath}/img/3.png"
-					alt="article">
-
-			</div>
-
-			<div class="home-article-content font1">
-
-				<a href="${pageContext.request.contextPath}/blogpost">
-
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
-
-				</a>
-
-				<div>Author Name</div>
-
-				<span> 07 January | 6 min read </span>
-
-			</div>
-
-		</div>
-
-
-		<!-- ================= ARTICLE 7 ================= -->
-
-		<div class="home-article">
-
-			<div class="home-article-img">
-
-				<img src="${pageContext.request.contextPath}/img/2.png"
-					alt="article">
-
-			</div>
-
-			<div class="home-article-content font1">
-
-				<a href="${pageContext.request.contextPath}/blogpost">
-
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
-
-				</a>
-
-				<div>Author Name</div>
-
-				<span> 07 January | 6 min read </span>
-
-			</div>
-
-		</div>
-
-
-		<!-- ================= ARTICLE 8 ================= -->
-
-		<div class="home-article">
-
-			<div class="home-article-img">
-
-				<img src="${pageContext.request.contextPath}/img/11.svg"
-					alt="article">
-
-			</div>
-
-			<div class="home-article-content font1">
-
-				<a href="${pageContext.request.contextPath}/blogpost">
-
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
-
-				</a>
-
-				<div>Author Name</div>
-
-				<span> 07 January | 6 min read </span>
-
-			</div>
-
-		</div>
-
-	</div>
-
-
-	<!-- ================= FOOTER ================= -->
-
-	<div class="footer">
-
-		<p>Copyright &copy; iBlog.com</p>
-
-	</div>
 
 </body>
 

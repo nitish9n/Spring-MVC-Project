@@ -1,7 +1,5 @@
 package learning.spring.mvc.model;
 
-
-
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -24,6 +22,8 @@ public class Post {
 
     private String author;
 
+    private String imageName;
+
     private LocalDateTime createdAt;
 
 
@@ -35,6 +35,7 @@ public class Post {
         return id;
     }
 
+
     public void setId(int id) {
         this.id = id;
     }
@@ -43,6 +44,7 @@ public class Post {
     public String getTitle() {
         return title;
     }
+
 
     public void setTitle(String title) {
         this.title = title;
@@ -53,6 +55,7 @@ public class Post {
         return content;
     }
 
+
     public void setContent(String content) {
         this.content = content;
     }
@@ -62,14 +65,26 @@ public class Post {
         return author;
     }
 
+
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+
+    public String getImageName() {
+        return imageName;
+    }
+
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
@@ -81,7 +96,11 @@ public class Post {
 
         return "Post [id=" + id
                 + ", title=" + title
+                + ", content=" + content
                 + ", author=" + author
-                + ", createdAt=" + createdAt + "]";
+                + ", imageName=" + imageName
+                + ", createdAt=" + createdAt
+                + "]";
+
     }
 }

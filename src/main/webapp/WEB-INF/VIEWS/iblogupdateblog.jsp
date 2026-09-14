@@ -1,9 +1,10 @@
 <%@ page language="java"
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -12,7 +13,6 @@
 
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
-
 
     <link rel="stylesheet"
         href="${pageContext.request.contextPath}/css/utils.css">
@@ -23,8 +23,7 @@
     <link rel="stylesheet"
         href="${pageContext.request.contextPath}/css/mobile.css">
 
-
-    <title>Add Blog - iBlog</title>
+    <title>Update Blog - iBlog</title>
 
 </head>
 
@@ -35,7 +34,6 @@
     <!-- ================= NAVIGATION ================= -->
 
     <nav class="navigation max-width-1 m-auto">
-
 
         <div class="nav-left">
 
@@ -135,20 +133,27 @@
     </div>
 
 
-    <!-- ================= ADD BLOG ================= -->
+    <!-- ================= UPDATE BLOG ================= -->
 
     <div class="contact-content max-width-1 m-auto my-2">
 
-
         <h1>
-            Write Your Blog
+            Update Your Blog
         </h1>
 
 
         <form
-            action="${pageContext.request.contextPath}/processBlog"
+            action="${pageContext.request.contextPath}/processUpdateBlog"
             method="post"
             enctype="multipart/form-data">
+
+
+            <!-- POST ID -->
+
+            <input
+                type="hidden"
+                name="id"
+                value="${post.id}">
 
 
             <!-- TITLE -->
@@ -164,6 +169,7 @@
                     type="text"
                     id="title"
                     name="title"
+                    value="${post.title}"
                     placeholder="Enter blog title"
                     required>
 
@@ -184,17 +190,52 @@
                     name="content"
                     rows="12"
                     placeholder="Write your blog here..."
-                    required></textarea>
+                    required>${post.content}</textarea>
 
             </div>
 
 
-            <!-- IMAGE -->
+            <!-- CURRENT IMAGE -->
+
+            <div class="form-box">
+
+                <label>
+                    Current Blog Image
+                </label>
+
+
+                <c:choose>
+
+                    <c:when test="${not empty post.imageName}">
+
+                        <img
+                            src="${pageContext.request.contextPath}/img/blogs/${post.imageName}"
+                            alt="${post.title}"
+                            style="max-width: 300px; display: block; margin: 10px 0;">
+
+                    </c:when>
+
+
+                    <c:otherwise>
+
+                        <img
+                            src="${pageContext.request.contextPath}/img/3.png"
+                            alt="iBlog"
+                            style="max-width: 300px; display: block; margin: 10px 0;">
+
+                    </c:otherwise>
+
+                </c:choose>
+
+            </div>
+
+
+            <!-- NEW IMAGE -->
 
             <div class="form-box">
 
                 <label for="image">
-                    Blog Image
+                    Change Blog Image
                 </label>
 
                 <input
@@ -205,7 +246,7 @@
                     accept="image/*">
 
                 <small>
-                    Image is optional.
+                    Leave this empty if you want to keep the current image.
                 </small>
 
             </div>
@@ -219,12 +260,11 @@
                     class="btn"
                     type="submit">
 
-                    Publish Blog
+                    Update Blog
 
                 </button>
 
             </div>
-
 
         </form>
 

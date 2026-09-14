@@ -1,6 +1,5 @@
 package learning.spring.mvc.dao;
 
-
 import java.util.List;
 
 import org.hibernate.Session;
@@ -62,6 +61,15 @@ public class PostDAO {
                     "query",
                     "%" + query + "%")
                 .getResultList();
+    }
+
+
+    public void updatePost(Post post) {
+
+        Session session =
+                sessionFactory.getCurrentSession();
+
+        session.merge(post);
     }
 
 

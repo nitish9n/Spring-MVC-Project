@@ -16,25 +16,32 @@ public class HomeController {
     @Autowired
     private PostService postService;
 
+
+    // =========================================================
+    // HOME PAGE
+    // =========================================================
+
     @GetMapping("/")
     public String home(Model model) {
 
-        // Get ALL posts from database
-        List<Post> posts = postService.getAllPosts();
+        List<Post> posts =
+                postService.getApprovedPosts();
 
-        // Send posts to homepage
-        model.addAttribute("posts", posts);
+        model.addAttribute(
+                "posts",
+                posts);
 
         return "iblog";
     }
 
+
+    // =========================================================
+    // ABOUT PAGE
+    // =========================================================
+
     @GetMapping("/about")
     public String about() {
-        return "iblogabout";
-    }
 
-    @GetMapping("/contact")
-    public String contact() {
-        return "iblogcontact";
+        return "iblogabout";
     }
 }

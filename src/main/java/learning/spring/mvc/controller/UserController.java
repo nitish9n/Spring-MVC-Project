@@ -39,7 +39,8 @@ public class UserController {
 
     @ResponseBody
     @GetMapping("/getUser/{id}")
-    public User getUser(@PathVariable(name = "id") int id) {
+    public User getUser(
+            @PathVariable(name = "id") int id) {
 
         return userservice.validateUser(id);
     }
@@ -56,7 +57,18 @@ public class UserController {
     // ================= SIGNUP =================
 
     @GetMapping("/signup")
-    public String showSignup() {
+    public String showSignup(
+            HttpSession session) {
+
+        User loggedInUser =
+                (User) session.getAttribute(
+                        "loggedInUser");
+
+        // Already logged in
+        if (loggedInUser != null) {
+
+            return "redirect:/";
+        }
 
         return "iblogsignup";
     }
@@ -78,7 +90,18 @@ public class UserController {
     // ================= LOGIN =================
 
     @GetMapping("/login")
-    public String showLogin() {
+    public String showLogin(
+            HttpSession session) {
+
+        User loggedInUser =
+                (User) session.getAttribute(
+                        "loggedInUser");
+
+        // Already logged in
+        if (loggedInUser != null) {
+
+            return "redirect:/";
+        }
 
         return "ibloglogin";
     }
@@ -92,18 +115,24 @@ public class UserController {
             HttpSession session) {
 
         User user =
-                userservice.loginUser(username, password);
+                userservice.loginUser(
+                        username,
+                        password);
 
         if (user != null) {
 
             // Store logged-in user in session
-            session.setAttribute("loggedInUser", user);
+            session.setAttribute(
+                    "loggedInUser",
+                    user);
 
             System.out.println(
-                    "Login successful: " + user.getUsername());
+                    "Login successful: "
+                    + user.getUsername());
 
             return "redirect:/";
         }
+
 
         model.addAttribute(
                 "error",
@@ -116,8 +145,17 @@ public class UserController {
     // ================= LOGOUT =================
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    public String logout(
+            HttpSession session) {
 
+        /*
+         * Destroy the complete session.
+         *
+         * This removes:
+         * loggedInUser
+         * old session data
+         * any other user-specific data
+         */
         session.invalidate();
 
         return "redirect:/";

@@ -36,7 +36,6 @@ public class BlogController {
         User user =
                 (User) session.getAttribute("loggedInUser");
 
-        // User must be logged in
         if (user == null) {
             return "redirect:/login";
         }
@@ -46,15 +45,18 @@ public class BlogController {
 
 
     // =========================================================
-    // PROCESS ADD BLOG
+    // PROCESS NEW BLOG
     // =========================================================
 
     @PostMapping("/processBlog")
     public String processBlog(
             @ModelAttribute Post post,
-            @RequestParam(value = "image", required = false)
+            @RequestParam(
+                    value = "image",
+                    required = false)
             MultipartFile image,
-            HttpSession session) throws IOException {
+            HttpSession session)
+            throws IOException {
 
         User user =
                 (User) session.getAttribute("loggedInUser");
@@ -64,7 +66,7 @@ public class BlogController {
             return "redirect:/login";
         }
 
-        // Set logged-in user's username as author
+        // Set author from logged-in user
         post.setAuthor(user.getUsername());
 
 
@@ -87,70 +89,63 @@ public class BlogController {
                                 originalFileName.lastIndexOf("."));
             }
 
-
-            // Create a unique filename
             String fileName =
                     System.currentTimeMillis()
                     + fileExtension;
 
 
-            // Get /img/blogs directory
             String uploadDirectory =
                     session.getServletContext()
                            .getRealPath("/img/blogs");
 
-
             File directory =
                     new File(uploadDirectory);
 
-
-            // Create directory if it doesn't exist
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
 
-            // Create destination file
             File destination =
                     new File(directory, fileName);
 
-
-            // Save uploaded image
             image.transferTo(destination);
 
-
-            // Store only filename in database
             post.setImageName(fileName);
         }
 
 
-        // Save post in MySQL
+        // PostService automatically sets:
+        // createdAt = current time
+        // status = PENDING
+
         postService.addPost(post);
 
-
-        // Go back to homepage
+        // After submitting, return to homepage
         return "redirect:/";
     }
 
 
     // =========================================================
-    // SHOW ALL BLOGS
+    // SHOW ALL APPROVED BLOGS
     // =========================================================
 
     @GetMapping("/blogs")
     public String showAllBlogs(Model model) {
 
         List<Post> posts =
-                postService.getAllPosts();
+                postService.getApprovedPosts();
 
-        model.addAttribute("posts", posts);
+        model.addAttribute(
+                "posts",
+                posts);
 
         return "iblogblogs";
     }
 
 
     // =========================================================
-    // SHOW SINGLE BLOG
+    // SHOW ONE APPROVED BLOG
     // =========================================================
 
     @GetMapping("/blogpost/{id}")
@@ -159,23 +154,23 @@ public class BlogController {
             Model model) {
 
         Post post =
-                postService.getPostById(id);
+                postService.getApprovedPostById(id);
 
-
-        // If post doesn't exist
+        // If post doesn't exist OR isn't approved
         if (post == null) {
             return "redirect:/";
         }
 
-
-        model.addAttribute("post", post);
+        model.addAttribute(
+                "post",
+                post);
 
         return "iblogblogpost";
     }
 
 
     // =========================================================
-    // SEARCH BLOGS
+    // SEARCH APPROVED BLOGS
     // =========================================================
 
     @GetMapping("/search")
@@ -184,10 +179,15 @@ public class BlogController {
             Model model) {
 
         List<Post> posts =
-                postService.searchPosts(query);
+                postService.searchApprovedPosts(query);
 
-        model.addAttribute("posts", posts);
-        model.addAttribute("query", query);
+        model.addAttribute(
+                "posts",
+                posts);
+
+        model.addAttribute(
+                "query",
+                query);
 
         return "iblogblogs";
     }
@@ -203,10 +203,8 @@ public class BlogController {
             HttpSession session,
             Model model) {
 
-        // Get logged-in user
         User user =
                 (User) session.getAttribute("loggedInUser");
-
 
         // User must be logged in
         if (user == null) {
@@ -214,50 +212,45 @@ public class BlogController {
         }
 
 
-        // Find the post
+        // Get post regardless of status
         Post post =
                 postService.getPostById(id);
 
-
-        // If post doesn't exist
         if (post == null) {
             return "redirect:/";
         }
 
 
-        // =====================================================
-        // OWNERSHIP CHECK
-        // =====================================================
+        // Only the owner can update the blog
+        if (!post.getAuthor()
+                .equals(user.getUsername())) {
 
-        /*
-         * Only the user who created the post
-         * can update it.
-         */
-
-        if (!post.getAuthor().equals(user.getUsername())) {
             return "redirect:/";
         }
 
 
-        // Send existing post to update JSP
-        model.addAttribute("post", post);
+        model.addAttribute(
+                "post",
+                post);
 
         return "iblogupdateblog";
     }
 
 
     // =========================================================
-    // PROCESS UPDATE BLOG
+    // PROCESS BLOG UPDATE
     // =========================================================
 
     @PostMapping("/processUpdateBlog")
     public String processUpdateBlog(
             @ModelAttribute Post updatedPost,
-            @RequestParam(value = "image", required = false)
+            @RequestParam(
+                    value = "image",
+                    required = false)
             MultipartFile image,
-            HttpSession session) throws IOException {
+            HttpSession session)
+            throws IOException {
 
-        // Get logged-in user
         User user =
                 (User) session.getAttribute("loggedInUser");
 
@@ -268,26 +261,17 @@ public class BlogController {
         }
 
 
-        // Find the existing post from database
+        // Get existing post
         Post existingPost =
                 postService.getPostById(
                         updatedPost.getId());
 
-
-        // If post doesn't exist
         if (existingPost == null) {
             return "redirect:/";
         }
 
 
-        // =====================================================
-        // OWNERSHIP CHECK
-        // =====================================================
-
-        /*
-         * Only the original author can update the post.
-         */
-
+        // Only owner can update
         if (!existingPost.getAuthor()
                 .equals(user.getUsername())) {
 
@@ -295,25 +279,19 @@ public class BlogController {
         }
 
 
-        // =====================================================
-        // UPDATE TITLE AND CONTENT
-        // =====================================================
-
+        // Update title
         existingPost.setTitle(
                 updatedPost.getTitle());
 
+
+        // Update content
         existingPost.setContent(
                 updatedPost.getContent());
 
 
         // =====================================================
-        // IMAGE UPDATE
+        // NEW IMAGE
         // =====================================================
-
-        /*
-         * If the user does NOT select a new image,
-         * the existing image remains unchanged.
-         */
 
         if (image != null && !image.isEmpty()) {
 
@@ -330,51 +308,43 @@ public class BlogController {
                                 originalFileName.lastIndexOf("."));
             }
 
-
-            // Create a new unique filename
             String fileName =
                     System.currentTimeMillis()
                     + fileExtension;
 
 
-            // Get /img/blogs directory
             String uploadDirectory =
                     session.getServletContext()
                            .getRealPath("/img/blogs");
 
-
             File directory =
                     new File(uploadDirectory);
 
-
-            // Create directory if it doesn't exist
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
 
-            // Create destination file
             File destination =
                     new File(directory, fileName);
 
-
-            // Save new image
             image.transferTo(destination);
 
-
-            // Replace old filename in database
             existingPost.setImageName(fileName);
         }
 
 
         // =====================================================
-        // SAVE UPDATED POST
+        // IMPORTANT:
+        // Edited blog needs admin approval again
         // =====================================================
+
+        existingPost.setStatus("PENDING");
+
 
         postService.updatePost(existingPost);
 
 
-        // Return to homepage
         return "redirect:/";
     }
 
@@ -388,7 +358,6 @@ public class BlogController {
             @PathVariable("id") int id,
             HttpSession session) {
 
-        // Get logged-in user
         User user =
                 (User) session.getAttribute("loggedInUser");
 
@@ -399,26 +368,15 @@ public class BlogController {
         }
 
 
-        // Find the post
         Post post =
                 postService.getPostById(id);
 
-
-        // If post doesn't exist
         if (post == null) {
             return "redirect:/";
         }
 
 
-        // =====================================================
-        // OWNERSHIP CHECK
-        // =====================================================
-
-        /*
-         * Only the user who created the post
-         * can delete it.
-         */
-
+        // Only owner can delete
         if (!post.getAuthor()
                 .equals(user.getUsername())) {
 
@@ -426,11 +384,9 @@ public class BlogController {
         }
 
 
-        // Delete post from database
         postService.deletePost(id);
 
 
-        // Return to homepage
         return "redirect:/";
     }
 }

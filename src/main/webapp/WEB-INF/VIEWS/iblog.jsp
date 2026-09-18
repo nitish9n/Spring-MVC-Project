@@ -1,8 +1,8 @@
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-
 <%@ page language="java"
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,34 +28,27 @@
 
     <style>
 
-        /* Blog Grid */
+        /* =========================================
+           BLOG GRID
+           ========================================= */
 
         .blog-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 30px;
+            gap: 25px;
+            margin-top: 25px;
         }
 
-
-        /* Blog Card */
 
         .blog-card {
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
             background: white;
-            transition: 0.2s;
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-
-        .blog-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
-        }
-
-
-        /* Blog Image */
 
         .blog-card-image {
             width: 100%;
@@ -64,8 +57,6 @@
             display: block;
         }
 
-
-        /* Blog Content */
 
         .blog-card-content {
             padding: 20px;
@@ -82,15 +73,11 @@
         }
 
 
-        /* Author */
-
         .blog-author {
             font-size: 14px;
             margin-bottom: 8px;
         }
 
-
-        /* Date */
 
         .blog-date {
             font-size: 13px;
@@ -98,82 +85,64 @@
         }
 
 
-        /*
-         * Short Blog Preview
-         *
-         * Only a few lines are displayed on the
-         * home page.
-         */
-
         .blog-preview {
             margin-top: 12px;
             line-height: 1.5;
 
             display: -webkit-box;
-            -webkit-box-orient: vertical;
             -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
 
             overflow: hidden;
-
-            color: #444;
         }
 
 
-        /* Read More */
+        /* =========================================
+           READ MORE
+           ========================================= */
 
         .read-more {
             display: inline-block;
             margin-top: 12px;
-            color: #007bff;
             text-decoration: none;
             font-weight: bold;
         }
 
 
-        .read-more:hover {
-            text-decoration: underline;
-        }
-
-
-        /* Blog Actions */
+        /* =========================================
+           OWNER BUTTONS
+           ========================================= */
 
         .blog-actions {
             margin-top: 15px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
 
-        /* Update Button */
-
-        .update-btn {
+        .update-btn,
+        .delete-btn {
             display: inline-block;
             padding: 8px 14px;
-            border: none;
             border-radius: 5px;
-            background: #007bff;
             color: white;
             text-decoration: none;
-            cursor: pointer;
+            font-size: 14px;
+        }
+
+
+        .update-btn {
+            background: #457b9d;
         }
 
 
         .update-btn:hover {
-            background: #0056b3;
+            background: #35657f;
         }
 
 
-        /* Delete Button */
-
         .delete-btn {
-            display: inline-block;
-            padding: 8px 14px;
-            border: none;
-            border-radius: 5px;
             background: #dc3545;
-            color: white;
-            text-decoration: none;
-            cursor: pointer;
         }
 
 
@@ -182,7 +151,41 @@
         }
 
 
-        /* Tablet */
+        /* =========================================
+           USER NAVIGATION
+           ========================================= */
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .user-nav a {
+            text-decoration: none;
+        }
+
+
+        .welcome-user {
+            font-size: 14px;
+        }
+
+
+        .logout-link {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+
+        .messages-link {
+            font-weight: bold;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
 
         @media screen and (max-width: 900px) {
 
@@ -192,8 +195,6 @@
 
         }
 
-
-        /* Mobile */
 
         @media screen and (max-width: 600px) {
 
@@ -211,13 +212,11 @@
 <body>
 
 
-    <!-- Navigation -->
+    <!-- NAVIGATION -->
 
     <nav class="navigation max-width-1 m-auto">
 
-
         <div class="nav-left">
-
 
             <a href="${pageContext.request.contextPath}/">
 
@@ -236,47 +235,35 @@
             <ul>
 
                 <li>
-
                     <a href="${pageContext.request.contextPath}/">
                         Home
                     </a>
-
                 </li>
 
-
                 <li>
-
                     <a href="${pageContext.request.contextPath}/about">
                         About
                     </a>
-
                 </li>
 
-
                 <li>
-
                     <a href="${pageContext.request.contextPath}/contact">
                         Contact
                     </a>
-
                 </li>
 
-
                 <li>
-
                     <a href="${pageContext.request.contextPath}/addBlog">
                         Add Blog
                     </a>
-
                 </li>
 
             </ul>
 
-
         </div>
 
 
-        <!-- Search -->
+        <!-- SEARCH -->
 
         <div class="nav-search">
 
@@ -288,7 +275,8 @@
                     class="form-input"
                     type="text"
                     name="query"
-                    placeholder="Article Search">
+                    placeholder="Article Search"
+                    required>
 
                 <button
                     class="btn"
@@ -303,20 +291,61 @@
         </div>
 
 
-        <!-- Login -->
+        <!-- LOGIN / USER -->
 
         <div class="nav-login">
 
-            <a
-                href="${pageContext.request.contextPath}/login"
-                class="login-link">
+            <c:choose>
 
-                Sign In
+                <c:when test="${not empty sessionScope.loggedInUser}">
 
-            </a>
+                    <div class="user-nav">
+
+                        <span class="welcome-user">
+
+                            Hi,
+                            ${sessionScope.loggedInUser.username}
+
+                        </span>
+
+
+                        <a
+                            href="${pageContext.request.contextPath}/myMessages"
+                            class="messages-link">
+
+                            My Messages
+
+                        </a>
+
+
+                        <a
+                            href="${pageContext.request.contextPath}/logout"
+                            class="logout-link">
+
+                            Logout
+
+                        </a>
+
+                    </div>
+
+                </c:when>
+
+
+                <c:otherwise>
+
+                    <a
+                        href="${pageContext.request.contextPath}/login"
+                        class="login-link">
+
+                        Sign In
+
+                    </a>
+
+                </c:otherwise>
+
+            </c:choose>
 
         </div>
-
 
     </nav>
 
@@ -328,10 +357,9 @@
     </div>
 
 
-    <!-- Home Introduction -->
+    <!-- HOME CONTENT -->
 
     <div class="m-auto content max-width-1 my-2">
-
 
         <div class="content-left">
 
@@ -341,16 +369,20 @@
 
 
             <p>
-                iBlog is a website which lets you submit
-                an article and share your thoughts with
-                other readers.
+
+                iBlog is a website which lets you
+                submit an article and share your
+                thoughts with other readers.
+
             </p>
 
 
             <p>
+
                 Read interesting articles, share your
-                knowledge and discover new ideas from
-                other bloggers.
+                knowledge and discover new ideas
+                from other bloggers.
+
             </p>
 
         </div>
@@ -364,7 +396,6 @@
 
         </div>
 
-
     </div>
 
 
@@ -375,17 +406,14 @@
     </div>
 
 
-    <!-- Blog Section -->
+    <!-- BLOGS -->
 
     <div class="home-articles max-width-1 m-auto font2">
-
 
         <h2>
             Featured Articles
         </h2>
 
-
-        <!-- No Blogs -->
 
         <c:if test="${empty posts}">
 
@@ -396,21 +424,18 @@
         </c:if>
 
 
-        <!-- Blog Grid -->
-
         <div class="blog-grid">
 
-
-            <c:forEach var="post" items="${posts}">
-
+            <c:forEach
+                var="post"
+                items="${posts}">
 
                 <div class="blog-card">
 
 
-                    <!-- Blog Image -->
+                    <!-- IMAGE -->
 
                     <c:choose>
-
 
                         <c:when test="${not empty post.imageName}">
 
@@ -431,16 +456,13 @@
 
                         </c:otherwise>
 
-
                     </c:choose>
 
 
-                    <!-- Blog Information -->
+                    <!-- CONTENT -->
 
                     <div class="blog-card-content">
 
-
-                        <!-- Title -->
 
                         <h3>
 
@@ -454,16 +476,12 @@
                         </h3>
 
 
-                        <!-- Author -->
-
                         <div class="blog-author">
 
                             By ${post.author}
 
                         </div>
 
-
-                        <!-- Date -->
 
                         <div class="blog-date">
 
@@ -472,16 +490,12 @@
                         </div>
 
 
-                        <!-- Short Content -->
-
                         <div class="blog-preview">
 
                             ${post.content}
 
                         </div>
 
-
-                        <!-- Read Full Blog -->
 
                         <a
                             class="read-more"
@@ -492,14 +506,9 @@
                         </a>
 
 
-                        <!-- Update / Delete -->
-
-                        <c:if test="${not empty sessionScope.loggedInUser
-                            and sessionScope.loggedInUser.username == post.author}">
-
+                        <c:if test="${not empty sessionScope.loggedInUser and sessionScope.loggedInUser.username == post.author}">
 
                             <div class="blog-actions">
-
 
                                 <a
                                     class="update-btn"
@@ -519,36 +528,28 @@
 
                                 </a>
 
-
                             </div>
-
 
                         </c:if>
 
 
                     </div>
 
-
                 </div>
-
 
             </c:forEach>
 
-
         </div>
-
 
     </div>
 
 
-    <!-- Footer -->
+    <!-- FOOTER -->
 
     <div class="footer">
 
         <p>
-
             Copyright &copy; iBlog.com
-
         </p>
 
     </div>

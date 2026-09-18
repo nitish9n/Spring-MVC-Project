@@ -28,8 +28,13 @@ public class Post {
 
     private LocalDateTime createdAt;
 
+    @Column(length = 20)
+    private String status;
+
+
     public Post() {
     }
+
 
     public int getId() {
         return id;
@@ -39,6 +44,7 @@ public class Post {
         this.id = id;
     }
 
+
     public String getTitle() {
         return title;
     }
@@ -46,6 +52,7 @@ public class Post {
     public void setTitle(String title) {
         this.title = title;
     }
+
 
     public String getContent() {
         return content;
@@ -55,6 +62,7 @@ public class Post {
         this.content = content;
     }
 
+
     public String getAuthor() {
         return author;
     }
@@ -62,6 +70,7 @@ public class Post {
     public void setAuthor(String author) {
         this.author = author;
     }
+
 
     public String getImageName() {
         return imageName;
@@ -71,6 +80,7 @@ public class Post {
         this.imageName = imageName;
     }
 
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -79,14 +89,26 @@ public class Post {
         this.createdAt = createdAt;
     }
 
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
     @Override
     public String toString() {
+
         return "Post [id=" + id
                 + ", title=" + title
                 + ", content=" + content
                 + ", author=" + author
                 + ", imageName=" + imageName
                 + ", createdAt=" + createdAt
+                + ", status=" + status
                 + "]";
     }
 }

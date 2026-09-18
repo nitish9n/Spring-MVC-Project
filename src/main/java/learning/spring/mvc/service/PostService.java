@@ -17,29 +17,22 @@ public class PostService {
     private PostDAO postDAO;
 
 
-    // =========================================================
-    // ADD NEW BLOG
-    // =========================================================
+    // ================= ADD POST =================
 
     @Transactional
     public void addPost(Post post) {
 
-        // Set current date and time
         post.setCreatedAt(
                 LocalDateTime.now());
 
-        // New blogs need admin approval
+        // Every new user blog requires admin approval
         post.setStatus("PENDING");
 
         postDAO.savePost(post);
     }
 
 
-    // =========================================================
-    // GET POST BY ID
-    // Returns post regardless of status
-    // Used for owner/admin operations
-    // =========================================================
+    // ================= GET POST BY ID =================
 
     @Transactional(readOnly = true)
     public Post getPostById(int id) {
@@ -48,10 +41,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // GET APPROVED POST BY ID
-    // Used when public user opens a blog
-    // =========================================================
+    // ================= GET APPROVED POST BY ID =================
 
     @Transactional(readOnly = true)
     public Post getApprovedPostById(int id) {
@@ -60,10 +50,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // GET ALL POSTS
-    // Used by admin
-    // =========================================================
+    // ================= GET ALL POSTS =================
 
     @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
@@ -72,10 +59,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // GET ONLY APPROVED POSTS
-    // Used on public homepage/blog page
-    // =========================================================
+    // ================= GET APPROVED POSTS =================
 
     @Transactional(readOnly = true)
     public List<Post> getApprovedPosts() {
@@ -84,10 +68,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // SEARCH APPROVED POSTS
-    // Public search only searches approved blogs
-    // =========================================================
+    // ================= SEARCH APPROVED POSTS =================
 
     @Transactional(readOnly = true)
     public List<Post> searchApprovedPosts(
@@ -97,10 +78,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // GET PENDING POSTS
-    // Used by admin
-    // =========================================================
+    // ================= GET PENDING POSTS =================
 
     @Transactional(readOnly = true)
     public List<Post> getPendingPosts() {
@@ -109,9 +87,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // APPROVE POST
-    // =========================================================
+    // ================= APPROVE POST =================
 
     @Transactional
     public void approvePost(int id) {
@@ -120,9 +96,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // REJECT POST
-    // =========================================================
+    // ================= REJECT POST =================
 
     @Transactional
     public void rejectPost(int id) {
@@ -131,9 +105,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // UPDATE POST
-    // =========================================================
+    // ================= UPDATE POST =================
 
     @Transactional
     public void updatePost(Post post) {
@@ -142,9 +114,7 @@ public class PostService {
     }
 
 
-    // =========================================================
-    // DELETE POST
-    // =========================================================
+    // ================= DELETE POST =================
 
     @Transactional
     public void deletePost(int id) {

@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import jakarta.servlet.http.HttpSession;
+
 import learning.spring.mvc.model.Admin;
 import learning.spring.mvc.model.Post;
 import learning.spring.mvc.service.AdminService;
@@ -24,9 +27,7 @@ public class AdminController {
     private PostService postService;
 
 
-    // =========================================================
-    // ADMIN LOGIN PAGE
-    // =========================================================
+    // ================= ADMIN LOGIN =================
 
     @GetMapping("/adminLogin")
     public String showAdminLogin() {
@@ -35,17 +36,12 @@ public class AdminController {
     }
 
 
-    // =========================================================
-    // PROCESS ADMIN LOGIN
-    // =========================================================
+    // ================= PROCESS ADMIN LOGIN =================
 
-    @org.springframework.web.bind.annotation.PostMapping(
-            "/processAdminLogin")
+    @PostMapping("/processAdminLogin")
     public String processAdminLogin(
-            @org.springframework.web.bind.annotation.RequestParam(
-                    "username") String username,
-            @org.springframework.web.bind.annotation.RequestParam(
-                    "password") String password,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
             HttpSession session,
             Model model) {
 
@@ -60,8 +56,13 @@ public class AdminController {
                     "loggedInAdmin",
                     admin);
 
+            System.out.println(
+                    "Admin login successful: "
+                    + admin.getUsername());
+
             return "redirect:/adminDashboard";
         }
+
 
         model.addAttribute(
                 "error",
@@ -71,9 +72,7 @@ public class AdminController {
     }
 
 
-    // =========================================================
-    // ADMIN DASHBOARD
-    // =========================================================
+    // ================= ADMIN DASHBOARD =================
 
     @GetMapping("/adminDashboard")
     public String showAdminDashboard(
@@ -84,14 +83,12 @@ public class AdminController {
                 (Admin) session.getAttribute(
                         "loggedInAdmin");
 
-        // Admin must be logged in
         if (admin == null) {
 
             return "redirect:/adminLogin";
         }
 
 
-        // Get blogs waiting for approval
         List<Post> pendingPosts =
                 postService.getPendingPosts();
 
@@ -99,13 +96,12 @@ public class AdminController {
                 "pendingPosts",
                 pendingPosts);
 
+
         return "iblogadmindashboard";
     }
 
 
-    // =========================================================
-    // APPROVE BLOG
-    // =========================================================
+    // ================= APPROVE POST =================
 
     @GetMapping("/approvePost/{id}")
     public String approvePost(
@@ -116,7 +112,6 @@ public class AdminController {
                 (Admin) session.getAttribute(
                         "loggedInAdmin");
 
-        // Only admin can approve
         if (admin == null) {
 
             return "redirect:/adminLogin";
@@ -125,13 +120,12 @@ public class AdminController {
 
         postService.approvePost(id);
 
+
         return "redirect:/adminDashboard";
     }
 
 
-    // =========================================================
-    // REJECT BLOG
-    // =========================================================
+    // ================= REJECT POST =================
 
     @GetMapping("/rejectPost/{id}")
     public String rejectPost(
@@ -142,7 +136,6 @@ public class AdminController {
                 (Admin) session.getAttribute(
                         "loggedInAdmin");
 
-        // Only admin can reject
         if (admin == null) {
 
             return "redirect:/adminLogin";
@@ -151,13 +144,12 @@ public class AdminController {
 
         postService.rejectPost(id);
 
+
         return "redirect:/adminDashboard";
     }
 
 
-    // =========================================================
-    // ADMIN LOGOUT
-    // =========================================================
+    // ================= ADMIN LOGOUT =================
 
     @GetMapping("/adminLogout")
     public String adminLogout(

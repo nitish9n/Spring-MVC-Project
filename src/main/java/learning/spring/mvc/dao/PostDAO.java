@@ -16,9 +16,7 @@ public class PostDAO {
     private SessionFactory sessionFactory;
 
 
-    // =========================================================
-    // SAVE NEW POST
-    // =========================================================
+    // ================= SAVE POST =================
 
     public void savePost(Post post) {
 
@@ -29,11 +27,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // GET POST BY ID
-    // Returns post regardless of status
-    // Used by owner/admin
-    // =========================================================
+    // ================= GET POST BY ID =================
 
     public Post getPostById(int id) {
 
@@ -44,10 +38,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // GET APPROVED POST BY ID
-    // Used when public user opens a blog
-    // =========================================================
+    // ================= GET APPROVED POST BY ID =================
 
     public Post getApprovedPostById(int id) {
 
@@ -65,10 +56,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // GET ALL POSTS
-    // Used when admin needs all posts
-    // =========================================================
+    // ================= GET ALL POSTS =================
 
     public List<Post> getAllPosts() {
 
@@ -82,10 +70,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // GET ONLY APPROVED POSTS
-    // These are visible to public users
-    // =========================================================
+    // ================= GET APPROVED POSTS =================
 
     public List<Post> getApprovedPosts() {
 
@@ -102,11 +87,10 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // SEARCH ONLY APPROVED POSTS
-    // =========================================================
+    // ================= SEARCH APPROVED POSTS =================
 
-    public List<Post> searchApprovedPosts(String query) {
+    public List<Post> searchApprovedPosts(
+            String query) {
 
         Session session =
                 sessionFactory.getCurrentSession();
@@ -128,10 +112,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // GET PENDING POSTS
-    // These are waiting for admin approval
-    // =========================================================
+    // ================= GET PENDING POSTS =================
 
     public List<Post> getPendingPosts() {
 
@@ -148,9 +129,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // APPROVE POST
-    // =========================================================
+    // ================= APPROVE POST =================
 
     public void approvePost(int id) {
 
@@ -167,9 +146,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // REJECT POST
-    // =========================================================
+    // ================= REJECT POST =================
 
     public void rejectPost(int id) {
 
@@ -186,9 +163,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // UPDATE POST
-    // =========================================================
+    // ================= UPDATE POST =================
 
     public void updatePost(Post post) {
 
@@ -199,9 +174,7 @@ public class PostDAO {
     }
 
 
-    // =========================================================
-    // DELETE POST
-    // =========================================================
+    // ================= DELETE POST =================
 
     public void deletePost(int id) {
 

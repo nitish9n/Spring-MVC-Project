@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
+
 import learning.spring.mvc.model.Post;
 import learning.spring.mvc.model.User;
 import learning.spring.mvc.service.PostService;
@@ -26,15 +27,15 @@ public class BlogController {
     private PostService postService;
 
 
-    // =========================================================
-    // SHOW ADD BLOG PAGE
-    // =========================================================
+    // ================= ADD BLOG PAGE =================
 
     @GetMapping("/addBlog")
-    public String showAddBlog(HttpSession session) {
+    public String showAddBlog(
+            HttpSession session) {
 
         User user =
-                (User) session.getAttribute("loggedInUser");
+                (User) session.getAttribute(
+                        "loggedInUser");
 
         if (user == null) {
             return "redirect:/login";
@@ -44,9 +45,7 @@ public class BlogController {
     }
 
 
-    // =========================================================
-    // PROCESS NEW BLOG
-    // =========================================================
+    // ================= PROCESS NEW BLOG =================
 
     @PostMapping("/processBlog")
     public String processBlog(
@@ -59,22 +58,23 @@ public class BlogController {
             throws IOException {
 
         User user =
-                (User) session.getAttribute("loggedInUser");
+                (User) session.getAttribute(
+                        "loggedInUser");
 
-        // User must be logged in
         if (user == null) {
             return "redirect:/login";
         }
 
-        // Set author from logged-in user
-        post.setAuthor(user.getUsername());
+
+        // Set the logged-in user as author
+        post.setAuthor(
+                user.getUsername());
 
 
-        // =====================================================
-        // IMAGE UPLOAD
-        // =====================================================
+        // ================= IMAGE UPLOAD =================
 
-        if (image != null && !image.isEmpty()) {
+        if (image != null
+                && !image.isEmpty()) {
 
             String originalFileName =
                     image.getOriginalFilename();
@@ -89,6 +89,7 @@ public class BlogController {
                                 originalFileName.lastIndexOf("."));
             }
 
+
             String fileName =
                     System.currentTimeMillis()
                     + fileExtension;
@@ -96,7 +97,9 @@ public class BlogController {
 
             String uploadDirectory =
                     session.getServletContext()
-                           .getRealPath("/img/blogs");
+                           .getRealPath(
+                                   "/img/blogs");
+
 
             File directory =
                     new File(uploadDirectory);
@@ -107,79 +110,107 @@ public class BlogController {
 
 
             File destination =
-                    new File(directory, fileName);
+                    new File(
+                            directory,
+                            fileName);
 
-            image.transferTo(destination);
 
-            post.setImageName(fileName);
+            image.transferTo(
+                    destination);
+
+
+            post.setImageName(
+                    fileName);
         }
 
 
-        // PostService automatically sets:
-        // createdAt = current time
-        // status = PENDING
+        /*
+         * PostService will automatically set:
+         *
+         * createdAt = current date/time
+         * status = PENDING
+         *
+         * Therefore a newly created blog
+         * requires admin approval.
+         */
 
         postService.addPost(post);
 
-        // After submitting, return to homepage
+
         return "redirect:/";
     }
 
 
-    // =========================================================
-    // SHOW ALL APPROVED BLOGS
-    // =========================================================
+    // ================= ALL PUBLIC BLOGS =================
 
     @GetMapping("/blogs")
-    public String showAllBlogs(Model model) {
+    public String showAllBlogs(
+            Model model) {
+
+        /*
+         * Only APPROVED blogs are visible
+         * to public users.
+         */
 
         List<Post> posts =
                 postService.getApprovedPosts();
+
 
         model.addAttribute(
                 "posts",
                 posts);
 
+
         return "iblogblogs";
     }
 
 
-    // =========================================================
-    // SHOW ONE APPROVED BLOG
-    // =========================================================
+    // ================= VIEW SINGLE BLOG =================
 
     @GetMapping("/blogpost/{id}")
     public String showBlog(
             @PathVariable("id") int id,
             Model model) {
 
-        Post post =
-                postService.getApprovedPostById(id);
+        /*
+         * Public users can open only
+         * APPROVED blogs.
+         */
 
-        // If post doesn't exist OR isn't approved
+        Post post =
+                postService.getApprovedPostById(
+                        id);
+
+
         if (post == null) {
             return "redirect:/";
         }
+
 
         model.addAttribute(
                 "post",
                 post);
 
+
         return "iblogblogpost";
     }
 
 
-    // =========================================================
-    // SEARCH APPROVED BLOGS
-    // =========================================================
+    // ================= SEARCH BLOGS =================
 
     @GetMapping("/search")
     public String search(
             @RequestParam("query") String query,
             Model model) {
 
+        /*
+         * Search only APPROVED blogs.
+         */
+
         List<Post> posts =
-                postService.searchApprovedPosts(query);
+                postService.searchApprovedPosts(
+                        query);
+
 
         model.addAttribute(
                 "posts",
@@ -189,13 +220,12 @@ public class BlogController {
                 "query",
                 query);
 
+
         return "iblogblogs";
     }
 
 
-    // =========================================================
-    // SHOW UPDATE BLOG PAGE
-    // =========================================================
+    // ================= UPDATE BLOG PAGE =================
 
     @GetMapping("/updateBlog/{id}")
     public String showUpdateBlog(
@@ -204,24 +234,29 @@ public class BlogController {
             Model model) {
 
         User user =
-                (User) session.getAttribute("loggedInUser");
+                (User) session.getAttribute(
+                        "loggedInUser");
 
-        // User must be logged in
+
         if (user == null) {
             return "redirect:/login";
         }
 
 
-        // Get post regardless of status
         Post post =
                 postService.getPostById(id);
+
 
         if (post == null) {
             return "redirect:/";
         }
 
 
-        // Only the owner can update the blog
+        /*
+         * Only the author of the blog
+         * can update it.
+         */
+
         if (!post.getAuthor()
                 .equals(user.getUsername())) {
 
@@ -233,13 +268,12 @@ public class BlogController {
                 "post",
                 post);
 
+
         return "iblogupdateblog";
     }
 
 
-    // =========================================================
-    // PROCESS BLOG UPDATE
-    // =========================================================
+    // ================= PROCESS UPDATE BLOG =================
 
     @PostMapping("/processUpdateBlog")
     public String processUpdateBlog(
@@ -252,26 +286,30 @@ public class BlogController {
             throws IOException {
 
         User user =
-                (User) session.getAttribute("loggedInUser");
+                (User) session.getAttribute(
+                        "loggedInUser");
 
 
-        // User must be logged in
         if (user == null) {
             return "redirect:/login";
         }
 
 
-        // Get existing post
         Post existingPost =
                 postService.getPostById(
                         updatedPost.getId());
+
 
         if (existingPost == null) {
             return "redirect:/";
         }
 
 
-        // Only owner can update
+        /*
+         * Only the original author
+         * can update the blog.
+         */
+
         if (!existingPost.getAuthor()
                 .equals(user.getUsername())) {
 
@@ -279,21 +317,17 @@ public class BlogController {
         }
 
 
-        // Update title
         existingPost.setTitle(
                 updatedPost.getTitle());
 
-
-        // Update content
         existingPost.setContent(
                 updatedPost.getContent());
 
 
-        // =====================================================
-        // NEW IMAGE
-        // =====================================================
+        // ================= NEW IMAGE =================
 
-        if (image != null && !image.isEmpty()) {
+        if (image != null
+                && !image.isEmpty()) {
 
             String originalFileName =
                     image.getOriginalFilename();
@@ -308,6 +342,7 @@ public class BlogController {
                                 originalFileName.lastIndexOf("."));
             }
 
+
             String fileName =
                     System.currentTimeMillis()
                     + fileExtension;
@@ -315,10 +350,13 @@ public class BlogController {
 
             String uploadDirectory =
                     session.getServletContext()
-                           .getRealPath("/img/blogs");
+                           .getRealPath(
+                                   "/img/blogs");
+
 
             File directory =
                     new File(uploadDirectory);
+
 
             if (!directory.exists()) {
                 directory.mkdirs();
@@ -326,32 +364,40 @@ public class BlogController {
 
 
             File destination =
-                    new File(directory, fileName);
+                    new File(
+                            directory,
+                            fileName);
 
-            image.transferTo(destination);
 
-            existingPost.setImageName(fileName);
+            image.transferTo(
+                    destination);
+
+
+            existingPost.setImageName(
+                    fileName);
         }
 
 
-        // =====================================================
-        // IMPORTANT:
-        // Edited blog needs admin approval again
-        // =====================================================
+        /*
+         * Important:
+         *
+         * If an APPROVED blog is edited,
+         * it should require admin approval again.
+         */
 
-        existingPost.setStatus("PENDING");
+        existingPost.setStatus(
+                "PENDING");
 
 
-        postService.updatePost(existingPost);
+        postService.updatePost(
+                existingPost);
 
 
         return "redirect:/";
     }
 
 
-    // =========================================================
-    // DELETE BLOG
-    // =========================================================
+    // ================= DELETE BLOG =================
 
     @GetMapping("/deleteBlog/{id}")
     public String deleteBlog(
@@ -359,10 +405,10 @@ public class BlogController {
             HttpSession session) {
 
         User user =
-                (User) session.getAttribute("loggedInUser");
+                (User) session.getAttribute(
+                        "loggedInUser");
 
 
-        // User must be logged in
         if (user == null) {
             return "redirect:/login";
         }
@@ -371,12 +417,17 @@ public class BlogController {
         Post post =
                 postService.getPostById(id);
 
+
         if (post == null) {
             return "redirect:/";
         }
 
 
-        // Only owner can delete
+        /*
+         * Only the author can delete
+         * their own blog.
+         */
+
         if (!post.getAuthor()
                 .equals(user.getUsername())) {
 

@@ -17,13 +17,12 @@ public class HomeController {
     private PostService postService;
 
 
-    // =========================================================
-    // HOME PAGE
-    // =========================================================
+    // ================= HOME =================
 
     @GetMapping("/")
     public String home(Model model) {
 
+        // Show only blogs approved by admin
         List<Post> posts =
                 postService.getApprovedPosts();
 
@@ -35,13 +34,12 @@ public class HomeController {
     }
 
 
-    // =========================================================
-    // ABOUT PAGE
-    // =========================================================
+    // ================= ABOUT =================
 
     @GetMapping("/about")
     public String about() {
 
         return "iblogabout";
     }
+
 }

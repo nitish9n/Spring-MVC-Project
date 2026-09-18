@@ -12,91 +12,420 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet"
-        href="${pageContext.request.contextPath}/css/utils.css">
+    <title>iBlog - Admin Login</title>
 
-    <link rel="stylesheet"
-        href="${pageContext.request.contextPath}/css/style.css">
-
-    <link rel="stylesheet"
-        href="${pageContext.request.contextPath}/css/mobile.css">
-
-    <title>Admin Login - iBlog</title>
 
     <style>
 
-        .admin-login-container {
-            max-width: 500px;
-            margin: 60px auto;
-            padding: 30px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background: #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .admin-login-container h1 {
-            text-align: center;
-            margin-bottom: 30px;
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #111111;
         }
 
-        .admin-login-container .form-box {
-            margin-bottom: 20px;
-        }
 
-        .admin-login-container label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+        /* ================= NAVIGATION ================= */
 
-        .admin-login-container .btn {
+        .navigation {
             width: 100%;
-            margin-top: 10px;
+            max-width: 1200px;
+            margin: auto;
+
+            min-height: 145px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 20px 30px;
+
+            gap: 45px;
         }
+
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+
+        .nav-left a {
+            text-decoration: none;
+            color: #111111;
+        }
+
+
+        .logo {
+            width: 94px;
+            height: 94px;
+            object-fit: contain;
+        }
+
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 38px;
+
+            list-style: none;
+        }
+
+
+        .nav-links a {
+            font-size: 27px;
+            color: #111111;
+            text-decoration: none;
+        }
+
+
+        .nav-links a:hover {
+            color: #c7660d;
+        }
+
+
+        .divider {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+
+        .divider hr {
+            border: 0;
+            border-top: 1px solid #dddddd;
+        }
+
+
+        /* ================= LOGIN AREA ================= */
+
+        .login-wrapper {
+            width: 100%;
+
+            display: flex;
+            justify-content: center;
+
+            padding: 70px 20px 80px;
+        }
+
+
+        .login-card {
+            width: 100%;
+            max-width: 620px;
+
+            background: #ffffff;
+
+            border: 1px solid #dddddd;
+            border-radius: 12px;
+
+            padding: 48px 40px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .login-title {
+            text-align: center;
+
+            font-size: 34px;
+            font-weight: 700;
+
+            margin-bottom: 14px;
+        }
+
+
+        .login-subtitle {
+            text-align: center;
+
+            font-size: 17px;
+
+            margin-bottom: 42px;
+
+            color: #333333;
+        }
+
+
+        /* ================= ERROR ================= */
 
         .error-message {
-            color: #dc3545;
             background: #f8d7da;
+            color: #842029;
+
             border: 1px solid #f5c2c7;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
+
+            border-radius: 6px;
+
+            padding: 12px 15px;
+
+            margin-bottom: 25px;
+
             text-align: center;
+
+            font-size: 15px;
         }
 
-        .back-link {
+
+        /* ================= FORM ================= */
+
+        .login-form {
+            width: 100%;
+        }
+
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+
+        .form-group label {
             display: block;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+
+        .form-group input {
+            display: block;
+
+            width: 100%;
+            max-width: 100%;
+
+            height: 52px;
+
+            padding: 0 14px;
+
+            border: 2px solid #d06a0b;
+
+            border-radius: 7px;
+
+            outline: none;
+
+            font-size: 16px;
+
+            font-family: inherit;
+        }
+
+
+        .form-group input:focus {
+            border-color: #a94f00;
+
+            box-shadow:
+                0 0 0 2px rgba(208, 106, 11, 0.12);
+        }
+
+
+        .form-group input::placeholder {
+            color: #777777;
+        }
+
+
+        /* ================= BUTTON ================= */
+
+        .login-button {
+            display: block;
+
+            width: 100%;
+
+            height: 54px;
+
+            margin-top: 10px;
+
+            border: none;
+            border-radius: 7px;
+
+            background: #c7660d;
+
+            color: #ffffff;
+
+            font-size: 18px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.1s ease;
+        }
+
+
+        .login-button:hover {
+            background: #a95305;
+        }
+
+
+        .login-button:active {
+            transform: scale(0.99);
+        }
+
+
+        /* ================= BACK LINK ================= */
+
+        .back-section {
             text-align: center;
+
+            margin-top: 28px;
+        }
+
+
+        .back-section a {
+            color: #c7660d;
+
+            text-decoration: none;
+
+            font-size: 15px;
+        }
+
+
+        .back-section a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+            text-align: center;
+
+            padding: 25px 20px;
+
             margin-top: 20px;
+
+            color: #555555;
+
+            font-size: 14px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media screen and (max-width: 800px) {
+
+            .navigation {
+                min-height: auto;
+
+                padding: 20px;
+
+                gap: 25px;
+            }
+
+
+            .nav-left {
+                gap: 25px;
+            }
+
+
+            .logo {
+                width: 75px;
+                height: 75px;
+            }
+
+
+            .nav-links {
+                gap: 20px;
+            }
+
+
+            .nav-links a {
+                font-size: 21px;
+            }
+
+        }
+
+
+        @media screen and (max-width: 600px) {
+
+            .navigation {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+
+            .nav-left {
+                width: 100%;
+
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+
+            .nav-links {
+                width: 100%;
+
+                flex-wrap: wrap;
+
+                gap: 18px;
+            }
+
+
+            .nav-links a {
+                font-size: 19px;
+            }
+
+
+            .login-wrapper {
+                padding: 35px 15px 50px;
+            }
+
+
+            .login-card {
+                padding: 35px 22px;
+            }
+
+
+            .login-title {
+                font-size: 28px;
+            }
+
+
+            .login-subtitle {
+                font-size: 15px;
+
+                margin-bottom: 30px;
+            }
+
+
+            .form-group input {
+                height: 50px;
+            }
+
         }
 
     </style>
 
 </head>
 
+
 <body>
+
 
     <!-- ================= NAVIGATION ================= -->
 
-    <nav class="navigation max-width-1 m-auto">
+    <nav class="navigation">
 
         <div class="nav-left">
 
             <a href="${pageContext.request.contextPath}/">
 
-                <span>
-
-                    <img
-                        src="${pageContext.request.contextPath}/img/logo.png"
-                        width="94px"
-                        alt="iBlog">
-
-                </span>
+                <img
+                    class="logo"
+                    src="${pageContext.request.contextPath}/img/logo.png"
+                    alt="iBlog">
 
             </a>
 
-            <ul>
+
+            <ul class="nav-links">
 
                 <li>
                     <a href="${pageContext.request.contextPath}/">
@@ -123,120 +452,122 @@
     </nav>
 
 
-    <div class="max-width-1 m-auto">
+    <div class="divider">
         <hr>
     </div>
 
 
     <!-- ================= ADMIN LOGIN ================= -->
 
-    <div class="admin-login-container">
+    <main class="login-wrapper">
 
-        <h1>Admin Login</h1>
-
-        <p style="text-align: center; margin-bottom: 25px;">
-            Login to manage iBlog
-        </p>
+        <div class="login-card">
 
 
-        <% 
-            String error =
-                (String) request.getAttribute("error");
-
-            if (error != null) {
-        %>
-
-            <div class="error-message">
-                <%= error %>
-            </div>
-
-        <%
-            }
-        %>
+            <h1 class="login-title">
+                Admin Login
+            </h1>
 
 
-        <form
-            action="${pageContext.request.contextPath}/processAdminLogin"
-            method="post">
+            <p class="login-subtitle">
+                Login to manage iBlog
+            </p>
 
 
-            <!-- USERNAME -->
+            <!-- ERROR MESSAGE -->
 
-            <div class="form-box">
+            <% if (request.getAttribute("error") != null) { %>
 
-                <label for="username">
-                    Admin Username
-                </label>
+                <div class="error-message">
+                    <%= request.getAttribute("error") %>
+                </div>
 
-                <input
-                    class="form-input"
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder="Enter admin username"
-                    required>
-
-            </div>
+            <% } %>
 
 
-            <!-- PASSWORD -->
+            <!-- LOGIN FORM -->
 
-            <div class="form-box">
-
-                <label for="password">
-                    Admin Password
-                </label>
-
-                <input
-                    class="form-input"
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter admin password"
-                    required>
-
-            </div>
+            <form
+                class="login-form"
+                action="${pageContext.request.contextPath}/processAdminLogin"
+                method="post">
 
 
-            <!-- LOGIN BUTTON -->
+                <!-- USERNAME -->
 
-            <div class="form-box">
+                <div class="form-group">
+
+                    <label for="username">
+                        Admin Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter admin username"
+                        required>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Admin Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter admin password"
+                        required>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
 
                 <button
-                    class="btn"
-                    type="submit">
+                    type="submit"
+                    class="login-button">
 
                     Login as Admin
 
                 </button>
 
+            </form>
+
+
+            <!-- BACK TO USER LOGIN -->
+
+            <div class="back-section">
+
+                <a href="${pageContext.request.contextPath}/login">
+                    Back to User Login
+                </a>
+
             </div>
 
-        </form>
 
+        </div>
 
-        <!-- BACK TO USER LOGIN -->
-
-        <a
-            class="back-link"
-            href="${pageContext.request.contextPath}/login">
-
-            ← Back to User Login
-
-        </a>
-
-    </div>
+    </main>
 
 
     <!-- ================= FOOTER ================= -->
 
-    <div class="footer">
+    <footer class="footer">
 
         <p>
             Copyright &copy; iBlog.com
         </p>
 
-    </div>
+    </footer>
+
 
 </body>
 

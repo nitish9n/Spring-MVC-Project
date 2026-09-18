@@ -2,6 +2,7 @@ package learning.spring.mvc.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class Post {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String author;
@@ -26,74 +28,59 @@ public class Post {
 
     private LocalDateTime createdAt;
 
-
     public Post() {
     }
-
 
     public int getId() {
         return id;
     }
 
-
     public void setId(int id) {
         this.id = id;
     }
-
 
     public String getTitle() {
         return title;
     }
 
-
     public void setTitle(String title) {
         this.title = title;
     }
-
 
     public String getContent() {
         return content;
     }
 
-
     public void setContent(String content) {
         this.content = content;
     }
-
 
     public String getAuthor() {
         return author;
     }
 
-
     public void setAuthor(String author) {
         this.author = author;
     }
-
 
     public String getImageName() {
         return imageName;
     }
 
-
     public void setImageName(String imageName) {
         this.imageName = imageName;
     }
-
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-
     @Override
     public String toString() {
-
         return "Post [id=" + id
                 + ", title=" + title
                 + ", content=" + content
@@ -101,6 +88,5 @@ public class Post {
                 + ", imageName=" + imageName
                 + ", createdAt=" + createdAt
                 + "]";
-
     }
 }

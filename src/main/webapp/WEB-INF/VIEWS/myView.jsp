@@ -12,5 +12,6 @@
 	<h1> Location is....${address}</h1>
 	
 	<h1>Path variable value is ${pathVariable}</h1>
+	<h1>Path variable value is ${pathVariable1}</h1>
 </body>
 </html>

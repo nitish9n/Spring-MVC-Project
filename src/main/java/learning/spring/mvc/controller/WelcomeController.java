@@ -13,89 +13,96 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class WelcomeController {
-	
+
 	@RequestMapping("/")
 	public String hello() {
 		System.out.println("hello");
 		return "index1";
 	}
-	
+
 	@RequestMapping("/admin")
 	public String admin() {
 		System.out.println("admin");
 		return "admin";
 	}
+
 	@RequestMapping("/order")
 	public String order() {
 		System.out.println("order");
 		return "order";
 	}
+
 	@RequestMapping("/CEO")
 	public String redirect() {
 		System.out.println("redirect to admin");
-		return "redirect:/admin";        
+		return "redirect:/admin";
 	}
-	
-	
+
 	// Request param
 	@RequestMapping("/book")
-	public String requestParam(@RequestParam(value="bookName", defaultValue="invalid") String bookName,
-			@RequestParam(value="price", defaultValue="0") int price, 
-			@RequestParam(value="location", defaultValue = "null") String location, 
-			Model model) {
-		model.addAttribute("myModel", bookName);  // adding msg to model
+	public String requestParam(@RequestParam(value = "bookName", defaultValue = "invalid") String bookName,
+			@RequestParam(value = "price", defaultValue = "0") int price,
+			@RequestParam(value = "location", defaultValue = "null") String location, Model model) {
+		model.addAttribute("myModel", bookName); // adding msg to model
 		model.addAttribute("mulya", price);
 		model.addAttribute("address", location);
-		
+
 		return "myView";
-		
-		// http://localhost:8080/Spring-MVC-Project/book?bookName=java (single parameter)
-		// http://localhost:8080/Spring-MVC-Project/book?bookName=java&price=100&location=bxr  (triple parameter)
+
+		// http://localhost:8080/Spring-MVC-Project/book?bookName=java (single
+		// parameter)
+		// http://localhost:8080/Spring-MVC-Project/book?bookName=java&price=100&location=bxr
+		// (triple parameter)
 	}
-	
+
 	// Path Variable
-	@RequestMapping("/path-var/{id}")
-	public String pathVariable(@PathVariable(value="id") int num, Model model) {
+	@RequestMapping("/path-var/{id}/{name}")
+	public String pathVariable(@PathVariable(value = "id") int num,
+			@PathVariable(value = "name") String name, Model model) {
 		model.addAttribute("pathVariable", num);
+		model.addAttribute("pathVariable1", name);
 		return "myView";
 		
+		//http://localhost:8080/Spring-MVC-Project/path-var/7/Khushi
+
 	}
-	// response body-> it bypass jsp page and return data directly into http response
+
+	// response body-> it bypass jsp page and return data directly into http
+	// response
 	@RequestMapping("/response")
 	@ResponseBody
-	public String responseBody(@RequestParam(value="name") String n1) {
-		System.out.println("Welcome "+n1);
-		return "Welcome "+n1;     // no need of .jsp page(view)
-		
+	public String responseBody(@RequestParam(value = "name") String n1) {
+		System.out.println("Welcome " + n1);
+		return "Welcome " + n1; // no need of .jsp page(view)
+
 	}
-	
+
 	// get system cookies
 	@RequestMapping("/getCookie")
-	public String getCookies(@CookieValue(value="JSESSIONID") String c, Model model) {
-		System.out.println("This is cookie: "+c);
+	public String getCookies(@CookieValue(value = "JSESSIONID") String c, Model model) {
+		System.out.println("This is cookie: " + c);
 		model.addAttribute("sessionId", c);
-		return "cookie";     
-		
+		return "cookie";
+
 	}
+
 	// create own cookies
 	@RequestMapping("/setMyCookie")
 	public String setMyCookies(HttpServletResponse response, Model model) {
-		
-		Cookie cookie1 = new Cookie("firstCookie", 	"SENSITIVEINFORMAION");
-		cookie1.setMaxAge(10);       // expiry
-		response.addCookie(cookie1); //it will set cookie to the whoever will search url
-		
-		return "redirect:/getMyCookie";     
-		
+
+		Cookie cookie1 = new Cookie("firstCookie", "SENSITIVEINFORMAION");
+		cookie1.setMaxAge(10); // expiry
+		response.addCookie(cookie1); // it will set cookie to the whoever will search url
+
+		return "redirect:/getMyCookie";
+
 	}
-	
+
 	@RequestMapping("/getMyCookie")
-	public String getMyCookies(@CookieValue(value="firstCookie") String c, Model model) {
-		System.out.println("This is cookie: "+c);
+	public String getMyCookies(@CookieValue(value = "firstCookie") String c, Model model) {
+		System.out.println("This is cookie: " + c);
 		model.addAttribute("sessionId", c);
-		return "cookie"; 
+		return "cookie";
 	}
 
 }
-
-

@@ -18,152 +18,112 @@ import learning.spring.mvc.service.ContactMessageService;
 @Controller
 public class ContactController {
 
-    @Autowired
-    private ContactMessageService contactMessageService;
+	@Autowired
+	private ContactMessageService contactMessageService;
 
+	// =========================================================
+	// SHOW CONTACT PAGE
+	// =========================================================
 
-    // =========================================================
-    // SHOW CONTACT PAGE
-    // =========================================================
+	@GetMapping("/contact")
+	public String showContactPage(HttpSession session, Model model) {
 
-    @GetMapping("/contact")
-    public String showContactPage(
-            HttpSession session,
-            Model model) {
+		User user = (User) session.getAttribute("loggedInUser");
 
-        User user =
-                (User) session.getAttribute("loggedInUser");
+		// If user is logged in, automatically use
+		// their details in the contact form
+		if (user != null) {
 
-        // If user is logged in, automatically use
-        // their details in the contact form
-        if (user != null) {
+			model.addAttribute("loggedInUser", user);
+		}
 
-            model.addAttribute(
-                    "loggedInUser",
-                    user);
-        }
+		return "iblogcontact";
+	}
 
-        return "iblogcontact";
-    }
+	// =========================================================
+	// PROCESS CONTACT FORM
+	// =========================================================
 
+	@PostMapping("/processContact")
+	public String processContact(@RequestParam("name") String name, @RequestParam("email") String email,
+			@RequestParam("subject") String subject, @RequestParam("message") String message, HttpSession session) {
 
-    // =========================================================
-    // PROCESS CONTACT FORM
-    // =========================================================
+		ContactMessage contactMessage = new ContactMessage();
 
-    @PostMapping("/processContact")
-    public String processContact(
-            @RequestParam("name") String name,
-            @RequestParam("email") String email,
-            @RequestParam("subject") String subject,
-            @RequestParam("message") String message,
-            HttpSession session) {
+		contactMessage.setName(name);
+		contactMessage.setEmail(email);
+		contactMessage.setSubject(subject);
+		contactMessage.setMessage(message);
 
-        ContactMessage contactMessage =
-                new ContactMessage();
+		// Service will set:
+		// createdAt = current time
+		// status = PENDING
+		contactMessageService.saveMessage(contactMessage);
 
-        contactMessage.setName(name);
-        contactMessage.setEmail(email);
-        contactMessage.setSubject(subject);
-        contactMessage.setMessage(message);
+		return "redirect:/contact?success=true";
+	}
 
-        // Service will set:
-        // createdAt = current time
-        // status = PENDING
-        contactMessageService.saveMessage(
-                contactMessage);
+	// =========================================================
+	// USER'S MESSAGES
+	// =========================================================
 
-        return "redirect:/contact?success=true";
-    }
+	@GetMapping("/myMessages")
+	public String showMyMessages(HttpSession session, Model model) {
 
+		User user = (User) session.getAttribute("loggedInUser");
 
-    // =========================================================
-    // USER'S MESSAGES
-    // =========================================================
+		// User must be logged in
+		if (user == null) {
 
-    @GetMapping("/myMessages")
-    public String showMyMessages(
-            HttpSession session,
-            Model model) {
+			return "redirect:/login";
+		}
 
-        User user =
-                (User) session.getAttribute(
-                        "loggedInUser");
+		List<ContactMessage> messages = contactMessageService.getMessagesByEmail(user.getEmail());
 
-        // User must be logged in
-        if (user == null) {
+		model.addAttribute("messages", messages);
 
-            return "redirect:/login";
-        }
+		return "iblogmymessages";
+	}
 
-        List<ContactMessage> messages =
-                contactMessageService
-                .getMessagesByEmail(
-                        user.getEmail());
+	// =========================================================
+	// ADMIN MESSAGES
+	// =========================================================
 
-        model.addAttribute(
-                "messages",
-                messages);
+	@GetMapping("/adminMessages")
+	public String showAdminMessages(HttpSession session, Model model) {
 
-        return "iblogmymessages";
-    }
+		Admin admin = (Admin) session.getAttribute("loggedInAdmin");
 
+		// Only admin can access messages
+		if (admin == null) {
 
-    // =========================================================
-    // ADMIN MESSAGES
-    // =========================================================
+			return "redirect:/adminLogin";
+		}
 
-    @GetMapping("/adminMessages")
-    public String showAdminMessages(
-            HttpSession session,
-            Model model) {
+		List<ContactMessage> messages = contactMessageService.getAllMessages();
 
-        Admin admin =
-                (Admin) session.getAttribute(
-                        "loggedInAdmin");
+		model.addAttribute("messages", messages);
 
-        // Only admin can access messages
-        if (admin == null) {
+		return "iblogadminmessages";
+	}
 
-            return "redirect:/adminLogin";
-        }
+	// =========================================================
+	// ADMIN REPLY
+	// =========================================================
 
-        List<ContactMessage> messages =
-                contactMessageService
-                .getAllMessages();
+	@PostMapping("/replyMessage")
+	public String replyMessage(@RequestParam("id") int id, @RequestParam("reply") String reply, HttpSession session) {
 
-        model.addAttribute(
-                "messages",
-                messages);
+		Admin admin = (Admin) session.getAttribute("loggedInAdmin");
 
-        return "iblogadminmessages";
-    }
+		// Only admin can reply
+		if (admin == null) {
 
+			return "redirect:/adminLogin";
+		}
 
-    // =========================================================
-    // ADMIN REPLY
-    // =========================================================
+		contactMessageService.replyToMessage(id, reply);
 
-    @PostMapping("/replyMessage")
-    public String replyMessage(
-            @RequestParam("id") int id,
-            @RequestParam("reply") String reply,
-            HttpSession session) {
-
-        Admin admin =
-                (Admin) session.getAttribute(
-                        "loggedInAdmin");
-
-        // Only admin can reply
-        if (admin == null) {
-
-            return "redirect:/adminLogin";
-        }
-
-        contactMessageService.replyToMessage(
-                id,
-                reply);
-
-        return "redirect:/adminMessages";
-    }
+		return "redirect:/adminMessages";
+	}
 }

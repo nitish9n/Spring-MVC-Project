@@ -20,143 +20,102 @@ import learning.spring.mvc.service.PostService;
 @Controller
 public class AdminController {
 
-    @Autowired
-    private AdminService adminService;
+	@Autowired
+	private AdminService adminService;
 
-    @Autowired
-    private PostService postService;
+	@Autowired
+	private PostService postService;
 
+	// ================= ADMIN LOGIN =================
 
-    // ================= ADMIN LOGIN =================
+	@GetMapping("/adminLogin")
+	public String showAdminLogin() {
 
-    @GetMapping("/adminLogin")
-    public String showAdminLogin() {
+		return "iblogadminlogin";
+	}
 
-        return "iblogadminlogin";
-    }
+	// ================= PROCESS ADMIN LOGIN =================
 
+	@PostMapping("/processAdminLogin")
+	public String processAdminLogin(@RequestParam("username") String username,
+			@RequestParam("password") String password, HttpSession session, Model model) {
 
-    // ================= PROCESS ADMIN LOGIN =================
+		Admin admin = adminService.loginAdmin(username, password);
 
-    @PostMapping("/processAdminLogin")
-    public String processAdminLogin(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            HttpSession session,
-            Model model) {
+		if (admin != null) {
 
-        Admin admin =
-                adminService.loginAdmin(
-                        username,
-                        password);
+			session.setAttribute("loggedInAdmin", admin);
 
-        if (admin != null) {
+			System.out.println("Admin login successful: " + admin.getUsername());
 
-            session.setAttribute(
-                    "loggedInAdmin",
-                    admin);
+			return "redirect:/adminDashboard";
+		}
 
-            System.out.println(
-                    "Admin login successful: "
-                    + admin.getUsername());
+		model.addAttribute("error", "Invalid admin username or password.");
 
-            return "redirect:/adminDashboard";
-        }
+		return "iblogadminlogin";
+	}
 
+	// ================= ADMIN DASHBOARD =================
 
-        model.addAttribute(
-                "error",
-                "Invalid admin username or password.");
+	@GetMapping("/adminDashboard")
+	public String showAdminDashboard(HttpSession session, Model model) {
 
-        return "iblogadminlogin";
-    }
+		Admin admin = (Admin) session.getAttribute("loggedInAdmin");
 
+		if (admin == null) {
 
-    // ================= ADMIN DASHBOARD =================
+			return "redirect:/adminLogin";
+		}
 
-    @GetMapping("/adminDashboard")
-    public String showAdminDashboard(
-            HttpSession session,
-            Model model) {
+		List<Post> pendingPosts = postService.getPendingPosts();
 
-        Admin admin =
-                (Admin) session.getAttribute(
-                        "loggedInAdmin");
+		model.addAttribute("pendingPosts", pendingPosts);
 
-        if (admin == null) {
+		return "iblogadmindashboard";
+	}
 
-            return "redirect:/adminLogin";
-        }
+	// ================= APPROVE POST =================
 
+	@GetMapping("/approvePost/{id}")
+	public String approvePost(@PathVariable("id") int id, HttpSession session) {
 
-        List<Post> pendingPosts =
-                postService.getPendingPosts();
+		Admin admin = (Admin) session.getAttribute("loggedInAdmin");
 
-        model.addAttribute(
-                "pendingPosts",
-                pendingPosts);
+		if (admin == null) {
 
+			return "redirect:/adminLogin";
+		}
 
-        return "iblogadmindashboard";
-    }
+		postService.approvePost(id);
 
+		return "redirect:/adminDashboard";
+	}
 
-    // ================= APPROVE POST =================
+	// ================= REJECT POST =================
 
-    @GetMapping("/approvePost/{id}")
-    public String approvePost(
-            @PathVariable("id") int id,
-            HttpSession session) {
+	@GetMapping("/rejectPost/{id}")
+	public String rejectPost(@PathVariable("id") int id, HttpSession session) {
 
-        Admin admin =
-                (Admin) session.getAttribute(
-                        "loggedInAdmin");
+		Admin admin = (Admin) session.getAttribute("loggedInAdmin");
 
-        if (admin == null) {
+		if (admin == null) {
 
-            return "redirect:/adminLogin";
-        }
+			return "redirect:/adminLogin";
+		}
 
+		postService.rejectPost(id);
 
-        postService.approvePost(id);
+		return "redirect:/adminDashboard";
+	}
 
+	// ================= ADMIN LOGOUT =================
 
-        return "redirect:/adminDashboard";
-    }
+	@GetMapping("/adminLogout")
+	public String adminLogout(HttpSession session) {
 
+		session.invalidate();
 
-    // ================= REJECT POST =================
-
-    @GetMapping("/rejectPost/{id}")
-    public String rejectPost(
-            @PathVariable("id") int id,
-            HttpSession session) {
-
-        Admin admin =
-                (Admin) session.getAttribute(
-                        "loggedInAdmin");
-
-        if (admin == null) {
-
-            return "redirect:/adminLogin";
-        }
-
-
-        postService.rejectPost(id);
-
-
-        return "redirect:/adminDashboard";
-    }
-
-
-    // ================= ADMIN LOGOUT =================
-
-    @GetMapping("/adminLogout")
-    public String adminLogout(
-            HttpSession session) {
-
-        session.invalidate();
-
-        return "redirect:/";
-    }
+		return "redirect:/";
+	}
 }

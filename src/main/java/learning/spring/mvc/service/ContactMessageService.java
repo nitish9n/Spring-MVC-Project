@@ -13,114 +13,96 @@ import learning.spring.mvc.model.ContactMessage;
 @Service
 public class ContactMessageService {
 
-    @Autowired
-    private ContactMessageDAO contactMessageDAO;
+	@Autowired
+	private ContactMessageDAO contactMessageDAO;
 
+	// =========================================================
+	// SAVE NEW CONTACT MESSAGE
+	// =========================================================
 
-    // =========================================================
-    // SAVE NEW CONTACT MESSAGE
-    // =========================================================
+	@Transactional
+	public void saveMessage(ContactMessage contactMessage) {
 
-    @Transactional
-    public void saveMessage(ContactMessage contactMessage) {
+		// Set message creation time
+		contactMessage.setCreatedAt(LocalDateTime.now());
 
-        // Set message creation time
-        contactMessage.setCreatedAt(
-                LocalDateTime.now());
+		// New messages are waiting for admin reply
+		contactMessage.setStatus("PENDING");
 
-        // New messages are waiting for admin reply
-        contactMessage.setStatus("PENDING");
+		contactMessageDAO.saveMessage(contactMessage);
+	}
 
-        contactMessageDAO.saveMessage(
-                contactMessage);
-    }
+	// =========================================================
+	// GET ALL MESSAGES
+	// =========================================================
 
+	@Transactional(readOnly = true)
+	public List<ContactMessage> getAllMessages() {
 
-    // =========================================================
-    // GET ALL MESSAGES
-    // =========================================================
+		return contactMessageDAO.getAllMessages();
+	}
 
-    @Transactional(readOnly = true)
-    public List<ContactMessage> getAllMessages() {
+	// =========================================================
+	// GET MESSAGE BY ID
+	// =========================================================
 
-        return contactMessageDAO.getAllMessages();
-    }
+	@Transactional(readOnly = true)
+	public ContactMessage getMessageById(int id) {
 
+		return contactMessageDAO.getMessageById(id);
+	}
 
-    // =========================================================
-    // GET MESSAGE BY ID
-    // =========================================================
+	// =========================================================
+	// GET MESSAGES BY USER EMAIL
+	// =========================================================
 
-    @Transactional(readOnly = true)
-    public ContactMessage getMessageById(int id) {
+	@Transactional(readOnly = true)
+	public List<ContactMessage> getMessagesByEmail(String email) {
 
-        return contactMessageDAO.getMessageById(id);
-    }
+		return contactMessageDAO.getMessagesByEmail(email);
+	}
 
+	// =========================================================
+	// GET PENDING MESSAGES
+	// =========================================================
 
-    // =========================================================
-    // GET MESSAGES BY USER EMAIL
-    // =========================================================
+	@Transactional(readOnly = true)
+	public List<ContactMessage> getPendingMessages() {
 
-    @Transactional(readOnly = true)
-    public List<ContactMessage> getMessagesByEmail(
-            String email) {
+		return contactMessageDAO.getPendingMessages();
+	}
 
-        return contactMessageDAO.getMessagesByEmail(
-                email);
-    }
+	// =========================================================
+	// ADMIN REPLY
+	// =========================================================
 
+	@Transactional
+	public void replyToMessage(int id, String reply) {
 
-    // =========================================================
-    // GET PENDING MESSAGES
-    // =========================================================
+		ContactMessage contactMessage = contactMessageDAO.getMessageById(id);
 
-    @Transactional(readOnly = true)
-    public List<ContactMessage> getPendingMessages() {
+		if (contactMessage != null) {
 
-        return contactMessageDAO.getPendingMessages();
-    }
+			// Save admin's reply
+			contactMessage.setReply(reply);
 
+			// Change status
+			contactMessage.setStatus("REPLIED");
 
-    // =========================================================
-    // ADMIN REPLY
-    // =========================================================
+			// Record reply time
+			contactMessage.setRepliedAt(LocalDateTime.now());
 
-    @Transactional
-    public void replyToMessage(
-            int id,
-            String reply) {
+			contactMessageDAO.updateMessage(contactMessage);
+		}
+	}
 
-        ContactMessage contactMessage =
-                contactMessageDAO.getMessageById(id);
+	// =========================================================
+	// UPDATE MESSAGE
+	// =========================================================
 
-        if (contactMessage != null) {
+	@Transactional
+	public void updateMessage(ContactMessage contactMessage) {
 
-            // Save admin's reply
-            contactMessage.setReply(reply);
-
-            // Change status
-            contactMessage.setStatus("REPLIED");
-
-            // Record reply time
-            contactMessage.setRepliedAt(
-                    LocalDateTime.now());
-
-            contactMessageDAO.updateMessage(
-                    contactMessage);
-        }
-    }
-
-
-    // =========================================================
-    // UPDATE MESSAGE
-    // =========================================================
-
-    @Transactional
-    public void updateMessage(
-            ContactMessage contactMessage) {
-
-        contactMessageDAO.updateMessage(
-                contactMessage);
-    }
+		contactMessageDAO.updateMessage(contactMessage);
+	}
 }

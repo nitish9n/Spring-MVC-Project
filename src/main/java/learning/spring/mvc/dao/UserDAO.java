@@ -12,43 +12,38 @@ import learning.spring.mvc.model.User;
 @Repository
 public class UserDAO {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+	@Autowired
+	private SessionFactory sessionFactory;
 
-    // Save user
-    public void saveUser(User user) {
+	// Save user
+	public void saveUser(User user) {
 
-        Session session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 
-        session.persist(user);
-    }
+		session.persist(user);
+	}
 
-    // Get one user by ID
-    public User getUserById(int id) {
+	// Get one user by ID
+	public User getUserById(int id) {
 
-        Session session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 
-        return session.get(User.class, id);
-    }
+		return session.get(User.class, id);
+	}
 
-    // Get all users
-    public List<User> getAllUsers() {
+	// Get all users
+	public List<User> getAllUsers() {
 
-        Session session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 
-        return session
-                .createQuery("from User", User.class)
-                .getResultList();
-    }
-    public User loginUser(String username, String password) {
+		return session.createQuery("from User", User.class).getResultList();
+	}
 
-        Session session = sessionFactory.getCurrentSession();
+	public User loginUser(String username, String password) {
 
-        return session.createQuery(
-                "from User where username = :username and password = :password",
-                User.class)
-                .setParameter("username", username)
-                .setParameter("password", password)
-                .uniqueResult();
-    }
+		Session session = sessionFactory.getCurrentSession();
+
+		return session.createQuery("from User where username = :username and password = :password", User.class)
+				.setParameter("username", username).setParameter("password", password).uniqueResult();
+	}
 }

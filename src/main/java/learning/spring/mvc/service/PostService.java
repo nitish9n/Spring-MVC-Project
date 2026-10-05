@@ -13,112 +13,99 @@ import learning.spring.mvc.model.Post;
 @Service
 public class PostService {
 
-    @Autowired
-    private PostDAO postDAO;
+	@Autowired
+	private PostDAO postDAO;
 
+	// ================= ADD POST =================
 
-    // ================= ADD POST =================
+	@Transactional
+	public void addPost(Post post) {
 
-    @Transactional
-    public void addPost(Post post) {
+		post.setCreatedAt(LocalDateTime.now());
 
-        post.setCreatedAt(
-                LocalDateTime.now());
+		// Every new user blog requires admin approval
+		post.setStatus("PENDING");
 
-        // Every new user blog requires admin approval
-        post.setStatus("PENDING");
+		postDAO.savePost(post);
+	}
 
-        postDAO.savePost(post);
-    }
+	// ================= GET POST BY ID =================
 
+	@Transactional(readOnly = true)
+	public Post getPostById(int id) {
 
-    // ================= GET POST BY ID =================
+		return postDAO.getPostById(id);
+	}
 
-    @Transactional(readOnly = true)
-    public Post getPostById(int id) {
+	// ================= GET APPROVED POST BY ID =================
 
-        return postDAO.getPostById(id);
-    }
+	@Transactional(readOnly = true)
+	public Post getApprovedPostById(int id) {
 
+		return postDAO.getApprovedPostById(id);
+	}
 
-    // ================= GET APPROVED POST BY ID =================
+	// ================= GET ALL POSTS =================
 
-    @Transactional(readOnly = true)
-    public Post getApprovedPostById(int id) {
+	@Transactional(readOnly = true)
+	public List<Post> getAllPosts() {
 
-        return postDAO.getApprovedPostById(id);
-    }
+		return postDAO.getAllPosts();
+	}
 
+	// ================= GET APPROVED POSTS =================
 
-    // ================= GET ALL POSTS =================
+	@Transactional(readOnly = true)
+	public List<Post> getApprovedPosts() {
 
-    @Transactional(readOnly = true)
-    public List<Post> getAllPosts() {
+		return postDAO.getApprovedPosts();
+	}
 
-        return postDAO.getAllPosts();
-    }
+	// ================= SEARCH APPROVED POSTS =================
 
+	@Transactional(readOnly = true)
+	public List<Post> searchApprovedPosts(String query) {
 
-    // ================= GET APPROVED POSTS =================
+		return postDAO.searchApprovedPosts(query);
+	}
 
-    @Transactional(readOnly = true)
-    public List<Post> getApprovedPosts() {
+	// ================= GET PENDING POSTS =================
 
-        return postDAO.getApprovedPosts();
-    }
+	@Transactional(readOnly = true)
+	public List<Post> getPendingPosts() {
 
+		return postDAO.getPendingPosts();
+	}
 
-    // ================= SEARCH APPROVED POSTS =================
+	// ================= APPROVE POST =================
 
-    @Transactional(readOnly = true)
-    public List<Post> searchApprovedPosts(
-            String query) {
+	@Transactional
+	public void approvePost(int id) {
 
-        return postDAO.searchApprovedPosts(query);
-    }
+		postDAO.approvePost(id);
+	}
 
+	// ================= REJECT POST =================
 
-    // ================= GET PENDING POSTS =================
+	@Transactional
+	public void rejectPost(int id) {
 
-    @Transactional(readOnly = true)
-    public List<Post> getPendingPosts() {
+		postDAO.rejectPost(id);
+	}
 
-        return postDAO.getPendingPosts();
-    }
+	// ================= UPDATE POST =================
 
+	@Transactional
+	public void updatePost(Post post) {
 
-    // ================= APPROVE POST =================
+		postDAO.updatePost(post);
+	}
 
-    @Transactional
-    public void approvePost(int id) {
+	// ================= DELETE POST =================
 
-        postDAO.approvePost(id);
-    }
+	@Transactional
+	public void deletePost(int id) {
 
-
-    // ================= REJECT POST =================
-
-    @Transactional
-    public void rejectPost(int id) {
-
-        postDAO.rejectPost(id);
-    }
-
-
-    // ================= UPDATE POST =================
-
-    @Transactional
-    public void updatePost(Post post) {
-
-        postDAO.updatePost(post);
-    }
-
-
-    // ================= DELETE POST =================
-
-    @Transactional
-    public void deletePost(int id) {
-
-        postDAO.deletePost(id);
-    }
+		postDAO.deletePost(id);
+	}
 }

@@ -12,181 +12,126 @@ import learning.spring.mvc.model.Post;
 @Repository
 public class PostDAO {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+	@Autowired
+	private SessionFactory sessionFactory;
 
+	// ================= SAVE POST =================
 
-    // ================= SAVE POST =================
+	public void savePost(Post post) {
 
-    public void savePost(Post post) {
+		Session session = sessionFactory.getCurrentSession();
 
-        Session session =
-                sessionFactory.getCurrentSession();
+		session.persist(post);
+	}
 
-        session.persist(post);
-    }
+	// ================= GET POST BY ID =================
 
+	public Post getPostById(int id) {
 
-    // ================= GET POST BY ID =================
+		Session session = sessionFactory.getCurrentSession();
 
-    public Post getPostById(int id) {
+		return session.get(Post.class, id);
+	}
 
-        Session session =
-                sessionFactory.getCurrentSession();
+	// ================= GET APPROVED POST BY ID =================
 
-        return session.get(Post.class, id);
-    }
+	public Post getApprovedPostById(int id) {
 
+		Session session = sessionFactory.getCurrentSession();
 
-    // ================= GET APPROVED POST BY ID =================
+		return session.createQuery("from Post " + "where id = :id " + "and status = :status", Post.class)
+				.setParameter("id", id).setParameter("status", "APPROVED").uniqueResult();
+	}
 
-    public Post getApprovedPostById(int id) {
+	// ================= GET ALL POSTS =================
 
-        Session session =
-                sessionFactory.getCurrentSession();
+	public List<Post> getAllPosts() {
 
-        return session.createQuery(
-                "from Post " +
-                "where id = :id " +
-                "and status = :status",
-                Post.class)
-                .setParameter("id", id)
-                .setParameter("status", "APPROVED")
-                .uniqueResult();
-    }
+		Session session = sessionFactory.getCurrentSession();
 
+		return session.createQuery("from Post order by createdAt desc", Post.class).getResultList();
+	}
 
-    // ================= GET ALL POSTS =================
+	// ================= GET APPROVED POSTS =================
 
-    public List<Post> getAllPosts() {
+	public List<Post> getApprovedPosts() {
 
-        Session session =
-                sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 
-        return session.createQuery(
-                "from Post order by createdAt desc",
-                Post.class)
-                .getResultList();
-    }
+		return session.createQuery("from Post " + "where status = :status " + "order by createdAt desc", Post.class)
+				.setParameter("status", "APPROVED").getResultList();
+	}
 
+	// ================= SEARCH APPROVED POSTS =================
 
-    // ================= GET APPROVED POSTS =================
+	public List<Post> searchApprovedPosts(String query) {
 
-    public List<Post> getApprovedPosts() {
+		Session session = sessionFactory.getCurrentSession();
 
-        Session session =
-                sessionFactory.getCurrentSession();
+		return session
+				.createQuery("from Post " + "where status = :status " + "and (" + "lower(title) like lower(:query) "
+						+ "or lower(content) like lower(:query)" + ") " + "order by createdAt desc", Post.class)
+				.setParameter("status", "APPROVED").setParameter("query", "%" + query + "%").getResultList();
+	}
 
-        return session.createQuery(
-                "from Post " +
-                "where status = :status " +
-                "order by createdAt desc",
-                Post.class)
-                .setParameter("status", "APPROVED")
-                .getResultList();
-    }
+	// ================= GET PENDING POSTS =================
 
+	public List<Post> getPendingPosts() {
 
-    // ================= SEARCH APPROVED POSTS =================
+		Session session = sessionFactory.getCurrentSession();
 
-    public List<Post> searchApprovedPosts(
-            String query) {
+		return session.createQuery("from Post " + "where status = :status " + "order by createdAt desc", Post.class)
+				.setParameter("status", "PENDING").getResultList();
+	}
 
-        Session session =
-                sessionFactory.getCurrentSession();
+	// ================= APPROVE POST =================
 
-        return session.createQuery(
-                "from Post " +
-                "where status = :status " +
-                "and (" +
-                "lower(title) like lower(:query) " +
-                "or lower(content) like lower(:query)" +
-                ") " +
-                "order by createdAt desc",
-                Post.class)
-                .setParameter("status", "APPROVED")
-                .setParameter(
-                        "query",
-                        "%" + query + "%")
-                .getResultList();
-    }
+	public void approvePost(int id) {
 
+		Session session = sessionFactory.getCurrentSession();
 
-    // ================= GET PENDING POSTS =================
+		Post post = session.get(Post.class, id);
 
-    public List<Post> getPendingPosts() {
+		if (post != null) {
 
-        Session session =
-                sessionFactory.getCurrentSession();
+			post.setStatus("APPROVED");
+		}
+	}
 
-        return session.createQuery(
-                "from Post " +
-                "where status = :status " +
-                "order by createdAt desc",
-                Post.class)
-                .setParameter("status", "PENDING")
-                .getResultList();
-    }
+	// ================= REJECT POST =================
 
+	public void rejectPost(int id) {
 
-    // ================= APPROVE POST =================
+		Session session = sessionFactory.getCurrentSession();
 
-    public void approvePost(int id) {
+		Post post = session.get(Post.class, id);
 
-        Session session =
-                sessionFactory.getCurrentSession();
+		if (post != null) {
 
-        Post post =
-                session.get(Post.class, id);
+			post.setStatus("REJECTED");
+		}
+	}
 
-        if (post != null) {
+	// ================= UPDATE POST =================
 
-            post.setStatus("APPROVED");
-        }
-    }
+	public void updatePost(Post post) {
 
+		Session session = sessionFactory.getCurrentSession();
 
-    // ================= REJECT POST =================
+		session.merge(post);
+	}
 
-    public void rejectPost(int id) {
+	// ================= DELETE POST =================
 
-        Session session =
-                sessionFactory.getCurrentSession();
+	public void deletePost(int id) {
 
-        Post post =
-                session.get(Post.class, id);
+		Session session = sessionFactory.getCurrentSession();
 
-        if (post != null) {
+		Post post = session.get(Post.class, id);
 
-            post.setStatus("REJECTED");
-        }
-    }
+		if (post != null) {
 
-
-    // ================= UPDATE POST =================
-
-    public void updatePost(Post post) {
-
-        Session session =
-                sessionFactory.getCurrentSession();
-
-        session.merge(post);
-    }
-
-
-    // ================= DELETE POST =================
-
-    public void deletePost(int id) {
-
-        Session session =
-                sessionFactory.getCurrentSession();
-
-        Post post =
-                session.get(Post.class, id);
-
-        if (post != null) {
-
-            session.remove(post);
-        }
-    }
+			session.remove(post);
+		}
+	}
 }

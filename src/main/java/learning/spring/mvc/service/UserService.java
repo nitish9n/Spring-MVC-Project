@@ -1,6 +1,5 @@
 package learning.spring.mvc.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,31 +12,32 @@ import learning.spring.mvc.model.User;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserDAO userDAO;
+	@Autowired
+	private UserDAO userDAO;
 
-    @Transactional
-    public void addUser(User user) {
+	@Transactional
+	public void addUser(User user) {
 
-        userDAO.saveUser(user);
+		userDAO.saveUser(user);
 
-        System.out.println("User registered successfully: " + user);
-    }
+		System.out.println("User registered successfully: " + user);
+	}
 
-    @Transactional
-    public User validateUser(int id) {
+	@Transactional
+	public User validateUser(int id) {
 
-        return userDAO.getUserById(id);
-    }
+		return userDAO.getUserById(id);
+	}
 
-    @Transactional
-    public List<User> getAllUsers() {
+	@Transactional
+	public List<User> getAllUsers() {
 
-        return userDAO.getAllUsers();
-    }
-    @Transactional
-    public User loginUser(String username, String password) {
+		return userDAO.getAllUsers();
+	}
 
-        return userDAO.loginUser(username, password);
-    }
+	@Transactional
+	public User loginUser(String username, String password) {
+
+		return userDAO.loginUser(username, password);
+	}
 }

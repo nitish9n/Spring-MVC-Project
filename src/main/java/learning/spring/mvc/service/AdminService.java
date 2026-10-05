@@ -10,12 +10,12 @@ import learning.spring.mvc.model.Admin;
 @Service
 public class AdminService {
 
-    @Autowired
-    private AdminDAO adminDAO;
+	@Autowired
+	private AdminDAO adminDAO;
 
-    @Transactional(readOnly = true)
-    public Admin loginAdmin(String username, String password) {
+	@Transactional(readOnly = true)
+	public Admin loginAdmin(String username, String password) {
 
-        return adminDAO.loginAdmin(username, password);
-    }
+		return adminDAO.loginAdmin(username, password);
+	}
 }

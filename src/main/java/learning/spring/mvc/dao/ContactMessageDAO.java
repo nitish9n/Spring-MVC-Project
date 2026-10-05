@@ -12,104 +12,75 @@ import learning.spring.mvc.model.ContactMessage;
 @Repository
 public class ContactMessageDAO {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+	@Autowired
+	private SessionFactory sessionFactory;
 
+	// =========================================================
+	// SAVE CONTACT MESSAGE
+	// =========================================================
 
-    // =========================================================
-    // SAVE CONTACT MESSAGE
-    // =========================================================
+	public void saveMessage(ContactMessage contactMessage) {
 
-    public void saveMessage(ContactMessage contactMessage) {
+		Session session = sessionFactory.getCurrentSession();
 
-        Session session =
-                sessionFactory.getCurrentSession();
+		session.persist(contactMessage);
+	}
 
-        session.persist(contactMessage);
-    }
+	// =========================================================
+	// GET ALL CONTACT MESSAGES
+	// =========================================================
 
+	public List<ContactMessage> getAllMessages() {
 
-    // =========================================================
-    // GET ALL CONTACT MESSAGES
-    // =========================================================
+		Session session = sessionFactory.getCurrentSession();
 
-    public List<ContactMessage> getAllMessages() {
+		return session.createQuery("from ContactMessage " + "order by createdAt desc", ContactMessage.class)
+				.getResultList();
+	}
 
-        Session session =
-                sessionFactory.getCurrentSession();
+	// =========================================================
+	// GET MESSAGE BY ID
+	// =========================================================
 
-        return session.createQuery(
-                "from ContactMessage " +
-                "order by createdAt desc",
-                ContactMessage.class)
-                .getResultList();
-    }
+	public ContactMessage getMessageById(int id) {
 
+		Session session = sessionFactory.getCurrentSession();
 
-    // =========================================================
-    // GET MESSAGE BY ID
-    // =========================================================
+		return session.get(ContactMessage.class, id);
+	}
 
-    public ContactMessage getMessageById(int id) {
+	// =========================================================
+	// GET MESSAGES BY USER EMAIL
+	// =========================================================
 
-        Session session =
-                sessionFactory.getCurrentSession();
+	public List<ContactMessage> getMessagesByEmail(String email) {
 
-        return session.get(
-                ContactMessage.class,
-                id);
-    }
+		Session session = sessionFactory.getCurrentSession();
 
+		return session.createQuery("from ContactMessage " + "where email = :email " + "order by createdAt desc",
+				ContactMessage.class).setParameter("email", email).getResultList();
+	}
 
-    // =========================================================
-    // GET MESSAGES BY USER EMAIL
-    // =========================================================
+	// =========================================================
+	// GET PENDING MESSAGES
+	// =========================================================
 
-    public List<ContactMessage> getMessagesByEmail(
-            String email) {
+	public List<ContactMessage> getPendingMessages() {
 
-        Session session =
-                sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 
-        return session.createQuery(
-                "from ContactMessage " +
-                "where email = :email " +
-                "order by createdAt desc",
-                ContactMessage.class)
-                .setParameter("email", email)
-                .getResultList();
-    }
+		return session.createQuery("from ContactMessage " + "where status = :status " + "order by createdAt desc",
+				ContactMessage.class).setParameter("status", "PENDING").getResultList();
+	}
 
+	// =========================================================
+	// UPDATE MESSAGE
+	// =========================================================
 
-    // =========================================================
-    // GET PENDING MESSAGES
-    // =========================================================
+	public void updateMessage(ContactMessage contactMessage) {
 
-    public List<ContactMessage> getPendingMessages() {
+		Session session = sessionFactory.getCurrentSession();
 
-        Session session =
-                sessionFactory.getCurrentSession();
-
-        return session.createQuery(
-                "from ContactMessage " +
-                "where status = :status " +
-                "order by createdAt desc",
-                ContactMessage.class)
-                .setParameter("status", "PENDING")
-                .getResultList();
-    }
-
-
-    // =========================================================
-    // UPDATE MESSAGE
-    // =========================================================
-
-    public void updateMessage(
-            ContactMessage contactMessage) {
-
-        Session session =
-                sessionFactory.getCurrentSession();
-
-        session.merge(contactMessage);
-    }
+		session.merge(contactMessage);
+	}
 }

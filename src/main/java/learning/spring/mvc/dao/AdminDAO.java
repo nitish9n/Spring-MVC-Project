@@ -10,19 +10,14 @@ import learning.spring.mvc.model.Admin;
 @Repository
 public class AdminDAO {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+	@Autowired
+	private SessionFactory sessionFactory;
 
-    public Admin loginAdmin(String username, String password) {
+	public Admin loginAdmin(String username, String password) {
 
-        Session session =
-                sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 
-        return session.createQuery(
-                "from Admin where username = :username and password = :password",
-                Admin.class)
-                .setParameter("username", username)
-                .setParameter("password", password)
-                .uniqueResult();
-    }
+		return session.createQuery("from Admin where username = :username and password = :password", Admin.class)
+				.setParameter("username", username).setParameter("password", password).uniqueResult();
+	}
 }
